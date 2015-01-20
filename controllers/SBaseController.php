@@ -26,7 +26,7 @@ Yii::import("srbac.components.Helper");
 
 class SBaseController extends CController {
 
-	public $alwaysAllowed = [];
+	public $guestAccessible = [];
 
 	/**
 	 * @return SrbacModule
@@ -42,8 +42,12 @@ class SBaseController extends CController {
      */
     protected function beforeAction($action) {
 
-		if (in_array($action->id, $this->alwaysAllowed)) {
+		if (in_array($action->id, $this->guestAccessible)) {
 			GOTO Access_Allowed;
+		}
+
+		if (Yii::app()->user->isGuest) {
+			GOTO Access_Disallowed;
 		}
 
 		$srbac = $this->getSrbac();
@@ -74,12 +78,11 @@ class SBaseController extends CController {
         }
 
 		$webUser = Yii::app()->user;
-		if (!$webUser->isGuest) {
-			if ($webUser->checkAccess($access) || $webUser->checkAccess($srbac->superUser)) {
-				GOTO Access_Allowed;
-			}
+		if ($webUser->checkAccess($access) || $webUser->checkAccess($srbac->superUser)) {
+			GOTO Access_Allowed;
 		}
 
+		Access_Disallowed:
 		$this->onUnauthorizedAccess();
 		return false;
 

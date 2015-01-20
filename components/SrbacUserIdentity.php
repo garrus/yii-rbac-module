@@ -14,18 +14,35 @@ class SrbacUserIdentity extends CComponent implements IUserIdentity{
 	public $stuff_no;
 	public $email;
 	public $mobile;
-	public $password;
+	protected $password;
 
 	/**
 	 * @var SrbacUser
 	 */
 	protected $user;
 
-	public function __construct($loginNames=[], $password){
+	/**
+	 * @param array $loginNames
+	 * @param string $password
+	 */
+	public function __construct($loginNames=[], $password=''){
 		foreach ($loginNames as $key => $value){
 			$this->$key = $value;
 		}
-		$this->password = $password;
+		$this->password = (string)$password;
+	}
+
+	/**
+	 * Create an authenticated UserIdentity that can be directly put into Yii::app()->user->login().
+	 *
+	 * @param SrbacUser $user
+	 * @return SrbacUserIdentity
+	 */
+	public static function createTrusted(SrbacUser $user){
+		$ui = new self();
+		$ui->user = $user;
+		$ui->password = false;
+		return $ui;
 	}
 
 	/**
@@ -50,6 +67,10 @@ class SrbacUserIdentity extends CComponent implements IUserIdentity{
 	 * @return boolean whether authentication succeeds.
 	 */
 	public function authenticate() {
+
+		if ($this->user && $this->password === false) {
+			return true;
+		}
 
 		$user = $this->findUser();
 		if (!$user) {
@@ -93,14 +114,9 @@ class SrbacUserIdentity extends CComponent implements IUserIdentity{
 	 */
 	public function getPersistentStates() {
 		if ($this->user) {
-			$states = [
+			return [
 				'displayName' => $this->user->displayName,
 			];
-			if ($this->user->name == 'administrator' &&
-				$this->password == Yii::app()->getGlobalState('sapass')) {
-				$states['force_modify_password'] = true;
-			}
-			return $states;
 		} else {
 			return [];
 		}

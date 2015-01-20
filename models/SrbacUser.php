@@ -19,6 +19,7 @@
  */
 class SrbacUser extends CActiveRecord
 {
+	const SA_NAME = 'administrator'; // the name of super admin
 
 	public $password_plain = '';
 	public $password_plain_confirm = '';

@@ -6,7 +6,7 @@ class UserController extends SBaseController{
 
 	public $menu = [];
 	public $layout = '/layouts/bootstrap';
-	public $alwaysAllowed = ['login', 'logout', 'register'];
+	public $guestAccessible = ['login', 'logout', 'register'];
 	public function init(){
 
 		$this->checkInstallation();
@@ -26,7 +26,7 @@ class UserController extends SBaseController{
 		$adminUser = false;
 		try {
 			$adminUser = Yii::app()->db->createCommand('select * from '. $this->module->usertable .' where name=:name')
-				->queryRow(true, ['name' => 'administrator']);
+				->queryRow(true, ['name' => SrbacUser::SA_NAME]);
 			$tableExists = true;
 		} catch (CDbException $e) {
 			if (strpos($e->getMessage(), 'table or view not found') === false) {
@@ -39,9 +39,7 @@ class UserController extends SBaseController{
 		if (!$adminUser) {
 			Helper::install(1, 0);
 			$info = $this->createAdminUser();
-			$ui = new SrbacUserIdentity(['name' => 'administrator'], $info['password']);
-			$ui->authenticate();
-			Yii::app()->user->login($ui, 86400);
+			Yii::app()->user->login(SrbacUserIdentity::createTrusted($info['user']), 86400);
 			$this->render('after_sa_creation', $info);
 			Yii::app()->end();
 		}
@@ -84,7 +82,7 @@ class UserController extends SBaseController{
 		$trans = $db->beginTransaction();
 		try {
 			$user = new SrbacUser();
-			$user->name = 'administrator';
+			$user->name = SrbacUser::SA_NAME;
 			$adminPass = substr(md5(uniqid()), 0, 8);
 			Yii::app()->setGlobalState('sapass', $adminPass);
 			$user->password_plain = $adminPass;
@@ -260,7 +258,7 @@ class UserController extends SBaseController{
 		$user->setScenario('change_password');
 
 		$needValidateOriPass = true;
-		if ($webUser->name == 'administrator' && $user->validatePassword(Yii::app()->getGlobalState('sapass', ''))) {
+		if ($webUser->name == SrbacUser::SA_NAME && $user->validatePassword(Yii::app()->getGlobalState('sapass', ''))) {
 			$needValidateOriPass = false;
 		}
 
