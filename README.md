@@ -1,2 +1,3 @@
-# yii-rbac-module
-A Yii module that allows you to manage users and auth items.
+For usage, please see the wiki page: https://github.com/garrus/yii-rbac-module/wiki
+
+
