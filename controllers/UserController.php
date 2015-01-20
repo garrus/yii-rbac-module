@@ -165,12 +165,15 @@ class UserController extends SBaseController{
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
+	 * @throws CHttpException
 	 */
 	public function actionDelete($id)
 	{
-		if ($this->module->superUser)
-
-		$this->loadModel($id)->delete();
+		$user = $this->loadModel($id);
+		if ($user->name == SrbacUser::SA_NAME) {
+			throw new CHttpException(400, '禁止删除管理员帐号。');
+		}
+		$user->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -182,9 +185,29 @@ class UserController extends SBaseController{
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('SrbacUser');
+		$model = new SrbacUser('search');
+		//$model->with('assignments');
+		$_attributes = [];
+		if (isset($_GET['SrbacUser'])) {
+			$_attributes = $_GET['SrbacUser'];
+		} else {
+			// somehow the parameters is over encoded.
+			foreach ($_GET as $key => $value) {
+				$key = urldecode($key);
+				if (preg_match('/^SrbacUser\[(.+?)\]$/', $key, $matches)) {
+					$_attributes[$matches[1]] = $value;
+				}
+			}
+		}
+
+		if (!empty($_attributes)) {
+			$model->attributes = $_attributes;
+		}
+
+		$dataProvider = $model->search();
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			'model' => $model,
 		));
 	}
 

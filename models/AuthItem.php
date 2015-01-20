@@ -12,17 +12,17 @@
  * @author Spyros Soldatos <spyros@valor.gr>
  * @package srbac.models
  * @since 1.0.0
+ *
+ * The followings are the available columns in table 'authitem':
+ * @property string $name
+ * @property integer $type
+ * @property string $description
+ * @property string $bizrule
+ * @property string $data
+ *
  */
 class AuthItem extends CActiveRecord {
-    /**
-     * The followings are the available columns in table 'authitem':
-     * @var string $name
-     * @var integer $type
-     * @var string $description
-     * @var string $bizrule
-     * @var string $data
-     *
-     */
+
 
     public static $TYPES = array('Operation', 'Task', 'Role');
     public $oldName;

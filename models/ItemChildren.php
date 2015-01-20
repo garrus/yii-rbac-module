@@ -13,13 +13,13 @@
  * @author Spyros Soldatos <spyros@valor.gr>
  * @package srbac.models
  * @since 1.0.0
+ *
+ * The followings are the available columns in table 'itemchildren':
+ * @property string $parent
+ * @property string $child
  */
 class ItemChildren extends CActiveRecord {
-    /**
-     * The followings are the available columns in table 'itemchildren':
-     * @var string $parent
-     * @var string $child
-     */
+
 
     /**
      * Returns the static model of the specified AR class.

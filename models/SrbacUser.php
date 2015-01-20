@@ -16,6 +16,8 @@
  * @property string $update_time
  *
  * @property boolean $isPasswordModified
+ *
+ * @property Assignments[] $assignments
  */
 class SrbacUser extends CActiveRecord
 {
@@ -64,7 +66,7 @@ class SrbacUser extends CActiveRecord
 			array('name,email,mobile,stuff_no', 'unique'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, displayName, password, salt, stuff_no, email, mobile, create_time, update_time', 'safe', 'on'=>'search'),
+			array('id, name, displayName, stuff_no, email, mobile', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -99,7 +101,14 @@ class SrbacUser extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'assignments' => [self::HAS_MANY, 'Assignments', 'userid'],
 		);
+	}
+
+	public function getRoleNames(){
+		return array_map(function($assignment){
+			return $assignment->itemname;
+		}, $this->assignments);
 	}
 
 	/**
@@ -134,16 +143,12 @@ class SrbacUser extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('displayName',$this->displayName,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('salt',$this->salt,true);
 		$criteria->compare('stuff_no',$this->stuff_no,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('mobile',$this->mobile,true);
-		$criteria->compare('create_time',$this->create_time,true);
-		$criteria->compare('update_time',$this->update_time,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

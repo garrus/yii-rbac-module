@@ -13,15 +13,15 @@
  * @author Spyros Soldatos <spyros@valor.gr>
  * @package srbac.models
  * @since 1.0.0
+ *
+ * The followings are the available columns in table 'authassignment':
+ * @property string $itemname
+ * @property string $userid
+ * @property string $bizrule
+ * @property string $data
  */
 class Assignments extends CActiveRecord {
-    /**
-     * The followings are the available columns in table 'authassignment':
-     * @var string $itemname
-     * @var string $userid
-     * @var string $bizrule
-     * @var string $data
-     */
+
 
     /**
      * Returns the static model of the specified AR class.

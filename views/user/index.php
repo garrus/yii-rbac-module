@@ -1,5 +1,6 @@
 <?php
 /* @var $this UserController */
+/* @var $model SrbacUser */
 /* @var $dataProvider CActiveDataProvider */
 $this->renderPartial('/authitem/frontpage');
 ?>
@@ -8,18 +9,27 @@ $this->renderPartial('/authitem/frontpage');
 <hr>
 
 <p>
-	<?php echo CHtml::link('创建新用户', ['create'], ['class' => 'btn btn-primary']);?>
+	<?php echo CHtml::link('<strong>+</strong> 创建新用户', ['create'], ['class' => 'btn btn-success']);?>
 </p>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$dataProvider,
+	'filter' => $model,
 	'htmlOptions' => ['class' => ''],
 	'template' => '{summary} {items} {pager}',
 	'itemsCssClass' => 'table table-hover table-condensed table-striped',
 	'columns' => [
-		'id',
+		[
+			'name' => 'id',
+			'headerHtmlOptions' => ['width' => '30px'],
+		],
 		'displayName',
 		'name',
+		[
+			'header' => '角色',
+			'value' => 'implode("<br>", $data->getRoleNames())',
+			'type' => 'raw',
+		],
 		'stuff_no',
 		'mobile',
 		[
@@ -27,20 +37,21 @@ $this->renderPartial('/authitem/frontpage');
 			'value' => 'CHtml::link($data->email, "mailto://". $data->email)',
 			'type' => 'raw',
 		],
-		'create_time',
 		[
-			'name' => 'update_time',
-			'value' => '$data->update_time == "0000-00-00 00:00:00" ? "-" : $data->update_time',
+			'name' => 'create_time',
+			'filter' => false,
 		],
+
 		[
 			'class' => 'CButtonColumn',
-			'template' => '{update}',
-			'updateButtonOptions' => ['class' => 'btn btn-xs btn-success'],
+			'template' => '{update} {delete}',
+			'updateButtonOptions' => ['class' => 'btn btn-xs btn-primary'],
 			'updateButtonImageUrl' => false,
 			'updateButtonLabel' => '编辑',
 
-//			'deleteButtonOptions' => ['class' => 'btn btn-xs btn-danger'],
-//			'deleteButtonImageUrl' => false,
+			'deleteButtonOptions' => ['class' => 'btn btn-xs btn-danger'],
+			'deleteButtonLabel' => '删除',
+			'deleteButtonImageUrl' => false,
 		]
 	]
-)); ?>
+));
