@@ -1,0 +1,94 @@
+* {
+    font-family: 'Microsoft Yahei', Helvetica,Arial, Tahoma, Verdana, Sans-Serif;
+}
+.nav>li>a {
+    padding: 5px 10px;
+    font-size: 13px;
+    font-family: 'Helvetica Neue', Helvetica, 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
+    color: gray;
+}
+.nav>li {
+    margin-top: 0 !important;
+}
+.nav>li>a{
+    background-color: transparent !important;
+    border-left: 1px solid transparent;
+    border-radius: 0 !important;
+}
+.nav>li.active>a,
+.nav>li.active:hover>a,
+.nav>li:hover>a{
+    color: purple;
+    border-left-color: purple;
+}
+.nav>li.active>a{
+    font-weight: bold;
+    border-left-width: 2px;
+}
+.nav .dropdown-nav>li {
+    margin-top: 2px;
+}
+.nav .dropdown-nav>li>a {
+    padding: 3px 7px 3px 25px;
+}
+
+tr.checked, tr.checked td {
+    background: #E4F0FC !important;
+}
+tr .link {
+    color: rgb(45, 169, 211);
+}
+tr .info {
+    font-size: 0.9em;
+    font-family: '微软雅黑', 'Courier New', Courier, monospace, Sans-serif;
+    opacity: 0.7;
+}
+tr .pub-date {
+    font-family: 'Courier New', Courier, monospace, Sans-serif;
+    font-weight: bold;
+}
+tr .title {
+    font-size: 14px;
+    line-height: 24px;
+}
+tr.entry-hidden td,tr.entry-hidden .title {
+    color: #b0b0b0;
+}
+tr td, tr .title {
+    transition: color 0.2s;
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+}
+tr.entry-hidden .title-wrapper {
+    color: red;
+    text-decoration: line-through;
+}
+code {
+    padding: 2px 0 !important;
+}
+span.required {
+    color: red;
+}
+.nav-pills .active>a, .nav-pills .active>a:hover, .nav-pills .active>a:focus{
+    color: #fff;
+    background-color: #428bca;
+}
+.form-inline .form-group {
+    margin-bottom: 15px;
+}
+.form-inline .form-group>label {
+    display: inline-block;
+    width: 8em;
+    text-align: right;
+    margin-right: 1em;
+}
+.form-inline .error-message,.form-inline .btn[type=submit] {
+    margin-left: 9em;
+}
+.field-desc {
+    margin-left: 9.5em;
+    margin-bottom: 0;
+}
+.required {
+    display: none;
+}
