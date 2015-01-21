@@ -17,7 +17,7 @@
  */
 ?>
 <?php $module = ""; ?>
-<div id="wizardMain" style="margin:10px">
+<div id="wizardMain" class="col-md-12">
     <table width="100%">
         <tr valign="top">
             <td width="40%" style="vertical-align: top">

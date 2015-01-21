@@ -125,8 +125,8 @@
           ?>
      </div>
      <br/>
-<?php endif; ?>
 <div id="wizard" class="row">
+	<?php endif; ?>
 	<div class="col-md-6">
 		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate("srbac", "Auth items"); ?></h3>
 		<div id="list">
@@ -140,9 +140,10 @@
 		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate('srbac', 'Actions') ?></h3>
 		<div id="preview"></div>
 	</div>
+<?php if (!$full) :?>
 </div>
-<?php if (!$full) {
-     if ($this->module->getShowFooter()) {
+
+     <?php if ($this->module->getShowFooter()) :
           $this->renderPartial($this->module->footer);
-     }
-}?>
+     endif;
+endif;

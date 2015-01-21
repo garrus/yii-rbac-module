@@ -7,16 +7,26 @@ class UserController extends SBaseController{
 	public $menu = [];
 	public $layout = '/layouts/bootstrap';
 	public $guestAccessible = ['login', 'logout', 'register'];
-	public function init(){
 
+	public function init(){
 		$this->checkInstallation();
 		parent::init();
 	}
 
-	public function filters(){
-		return [
-			'accessControl',
-		];
+	/**
+	 * @param CAction $action
+	 * @return bool
+	 */
+	protected function beforeAction($action){
+
+		if (Yii::app()->user->checkAccess($this->getSrbac()->superUser) ||
+			!Helper::isAuthorizer()
+		) {
+			$this->logAccess();
+			return true;
+		} else {
+			return parent::beforeAction($action);
+		}
 	}
 
 
@@ -251,7 +261,11 @@ class UserController extends SBaseController{
 		if (isset($_POST['SrbacLoginForm'])) {
 			$form->attributes = $_POST['SrbacLoginForm'];
 			if ($form->validate() && $form->login()) {
-				$req->redirect($this->module->backendHomeUrl);
+				if (Yii::app()->user->name == 'administrator') {
+					$req->redirect('index');
+				} else {
+					$req->redirect($this->module->backendHomeUrl);
+				}
 			}
 		}
 

@@ -78,7 +78,7 @@ class SBaseController extends CController {
         }
 
 		$webUser = Yii::app()->user;
-		if ($webUser->checkAccess($access) || $webUser->checkAccess($srbac->superUser)) {
+		if ($webUser->checkAccess($access) /*|| $webUser->checkAccess($srbac->superUser)*/ ) {
 			GOTO Access_Allowed;
 		}
 

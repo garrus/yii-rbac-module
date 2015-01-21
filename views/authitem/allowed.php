@@ -37,29 +37,31 @@ foreach ($controllers as $n => $controller) {
 }
 ?>
 <?php echo SHtml::form(); ?>
-<div class="vertTab">
-    <?php
-    $this->widget('system.web.widgets.CTabView',
-        array(
-            'tabs' => $cont,
-            //'cssFile' => $this->module->getCssUrl(),
-        ));
-    ?>
-</div>
-<div class="action">
-    <?php echo SHtml::ajaxSubmitButton(Helper::translate("srbac", "Save"),
-        array('saveAllowed'),
-        array(
-            'type' => 'POST',
-            'update' => '#wizard',
-            'beforeSend' => 'function(){$("#wizard").addClass("srbacLoading");}',
-            'complete' => 'function(){$("#wizard").removeClass("srbacLoading");}',
-        ),
-        array(
-            'name' => 'buttonSave',
-        )
-    )
-    ?>
+<div class="col-md-6">
+	<div class="vertTab">
+		<?php
+		$this->widget('system.web.widgets.CTabView',
+			array(
+				'tabs' => $cont,
+				//'cssFile' => $this->module->getCssUrl(),
+			));
+		?>
+	</div>
+	<div class="action">
+		<?php echo SHtml::ajaxSubmitButton(Helper::translate("srbac", "Save"),
+			array('saveAllowed'),
+			array(
+				'type' => 'POST',
+				'update' => '#wizard',
+				'beforeSend' => 'function(){$("#wizard").addClass("srbacLoading");}',
+				'complete' => 'function(){$("#wizard").removeClass("srbacLoading");}',
+			),
+			array(
+				'name' => 'buttonSave',
+			)
+		)
+		?>
+	</div>
 </div>
 <?php echo SHtml::endForm(); ?>
 <!--Adjust tabview height--->

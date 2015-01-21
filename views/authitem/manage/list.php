@@ -50,7 +50,7 @@
             ),
 			['class' => 'btn btn-success btn-sm', 'style' => 'color: white; font-size: 13px; padding: 3px 7px;']
         ); ?>
-    <div class="form-inline" style="margin: 0; display: inline-block;">
+    <div class="form-inline pull-right">
         <div class="form-group-sm">
 		<?php
 		echo CHtml::label(Helper::translate('srbac', 'Search'). ' ', 'search-auth-item', ['style' => 'margin: 0 0.5em 0 1em;']);

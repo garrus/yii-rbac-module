@@ -33,21 +33,21 @@ class AuthitemController extends SBaseController {
 
     /**
      * Checks if the user has the authority role
-     * @param String $action The current action
+     * @param CAction $action The current action
      * @return Boolean true if user has the authority role
      */
     protected function beforeAction($action) {
 
-        if (!$this->module->isInstalled() && $action->id != "install") {
+        if (!$this->getSrbac()->isInstalled() && $action->id != "install") {
             $this->redirect(array("install"));
             return false;
         }
 
-        if ($this->module->debug) {
+        if ($this->getSrbac()->debug) {
 			$this->logAccess();
             return true;
         }
-        if (Yii::app()->user->checkAccess(Helper::findModule('srbac')->superUser) ||
+        if (Yii::app()->user->checkAccess($this->getSrbac()->superUser) ||
             !Helper::isAuthorizer()
         ) {
 			$this->logAccess();

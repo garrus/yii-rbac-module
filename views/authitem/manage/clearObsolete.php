@@ -16,7 +16,7 @@
 ?>
 <?php if ($items) { ?>
 
-    <div style="margin:10px" id="obsoleteList">
+    <div class="col-md-6" id="obsoleteList">
         <table class="srbacDataGrid" style="width:50%">
             <tr>
                 <th>
@@ -52,11 +52,13 @@
     </div>
 
 <?php } else { ?>
-    <table class="srbacDataGrid" style="width:50%">
-        <tr>
-            <th>
-                <?php echo Helper::translate("srbac", "No authItems that don't belong to a controller were found"); ?>
-            </th>
-        </tr>
-    </table>
+	<div class="col-md-6">
+		<table class="srbacDataGrid" style="width:50%">
+			<tr>
+				<th>
+					<?php echo Helper::translate("srbac", "No authItems that don't belong to a controller were found"); ?>
+				</th>
+			</tr>
+		</table>
+	</div>
 <?php } ?>

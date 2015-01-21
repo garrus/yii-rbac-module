@@ -15,6 +15,7 @@
  * @since 1.1.1
  */
 ?>
+<div class="col-md-6">
 <?php if ($removed) { ?>
     <table class="srbacDataGrid" style="width:50%">
         <tr>
@@ -50,3 +51,4 @@
 
     </table>
 <?php } ?>
+</div>

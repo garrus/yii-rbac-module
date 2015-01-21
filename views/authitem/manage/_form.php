@@ -100,10 +100,4 @@
     <?php echo SHtml::endForm(); ?>
 
 </div><!-- srbacForm -->
-<script language="javascript">
-    <?php echo SHtml::ajax(array(
-    'type'=>'POST',
-    'url'=>array('manage'),
-    'update'=>'#list',
-    )); ?>
-</script>
+
