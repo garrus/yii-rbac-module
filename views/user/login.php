@@ -3,6 +3,7 @@
  * @var UserController $this
  * @var SrbacLoginForm $model
  * @var CActiveForm $form
+ * @var string $dynamicPassword
  */
 ?>
 <script type="text/javascript">
@@ -10,7 +11,7 @@
 </script>
 <div class="row" style="
 	margin: 150px auto;
-	width: 400px;
+	width: 500px;
 	border-radius: 10px;
 	border: 2px solid #333;
 	box-shadow: 0 0 8px 2px gray;
@@ -44,7 +45,7 @@
 				break;
 			}
 		}
-		echo '<label for="login_type">登录方式</label>';
+		echo '<label for="login_type" class="control-label">登录方式</label>';
 		echo CHtml::dropDownList('login_type', $loginType, [
 			'name' => '登录名',
 			'stuff_no' => '工号',
@@ -69,8 +70,18 @@
 	</div>
 
 	<div class="form-group">
+		<?php echo CHtml::label('动态密码', 'dynamic_password', ['class' => 'control-label']);?>
+		<?php echo CHtml::textField('dynamic_password', '', ['class' => 'form-control', 'autocomplete' => 'off']);?>
+		<?php echo $form->error($model, 'dynamic_password', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']);?>
+		<p class="field-desc text-info">
+			没有收到或者已过期？<?php echo CHtml::link('点此重新发送', '#', ['class' => '', 'id' => 'resent-dynamic-password']);?>
+		</p>
+	</div>
+
+	<div class="form-group">
+
 		<?php echo CHtml::submitButton('登录', ['class' => 'btn btn-primary']);?>
-		or <?php echo CHtml::link('注册', ['register'], ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']);?>
+		or <?php echo CHtml::link('注册', ['register']);?>
 	</div>
 
 	<?php $this->endWidget($form);?>
@@ -79,11 +90,78 @@
 <script type="text/javascript">
 	$(function(){
 		var $form = $("#srbac-login-form");
+		var sendDpInterval = 0;
 		$form.delegate("#login_type", "change", function(e){
 			var type = $(this).val();
 			var $targetRow = $form.find(".login-name-row[role=login-by-" + type + "]");
 			$targetRow.toggleClass("hide", false).find("input[type=text]").attr("disabled", false);
 			$targetRow.siblings(".login-name-row").toggleClass("hide", true).find("input[type=text]").attr("disabled", "disabled");
+		}).delegate("#resent-dynamic-password", "click", function(e){
+			var $link = $(this);
+			if ($link.hasClass("disabled")) return false;
+
+			if ($form.find("input").eq(0).val().length==0 || $form.find("input").eq(1).length==0) {
+				noty({"text": "请先填写用户名和密码", "type": "warning", "timeout": 2000, "layout": "topCenter"});
+				return false;
+			}
+
+			$link.addClass("disabled");
+			clearInterval(sendDpInterval);
+
+			$form.find("#dynamic_password").val("");
+			var xhr = $.post($form.attr("action"), $form.serialize(), function(json){
+				if (json.ret == 1) {
+					noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
+					$link.removeClass("disabled");
+				} else {
+					noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
+					startCounting();
+				}
+			}, "json").error(function(xhr, settings, error){
+				$link.removeClass("disabled");
+				noty({"text": xhr.responseText, "type": "error", "timeout": 7000, "layout": "topCenter"});
+			});
+
+			function startCounting(){
+				$link.data("ori-text", $link.text());
+				$link.text("请耐心等候30秒");
+
+				var sec = 30;
+				sendDpInterval = setInterval(function(){
+					if (--sec) {
+						$link.text("请耐心等候" + sec + "秒");
+					} else {
+						clearInterval(sendDpInterval);
+						$link.text($link.data("ori-text"));
+						$link.removeClass("disabled");
+						xhr.abort();
+					}
+				}, 1000);
+			}
+
+			return false;
+		});
+
+		$form.on("submit", function(e){
+			var $btn = $(this);
+			if ($btn.hasClass("disabled")) return false;
+
+			var $dp = $form.find("#dynamic_password");
+			if (!$dp.val()) {
+				$btn.attr("disabled", true).addClass("disabled");
+				$.post($form.attr("action"), $form.serialize(), function(json){
+					if (json.ret == 1) {
+						noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
+					} else {
+						noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
+					}
+					$btn.attr("disabled", false).removeClass("disabled");
+				}, "json").error(function(xhr, settings, error){
+					$btn.attr("disabled", false).removeClass("disabled");;
+					noty({"text": xhr.responseText, "type": "error", "timeout": 7000, "layout": "topCenter"});
+				});
+				e.preventDefault();
+			}
 		});
 	});
 </script>

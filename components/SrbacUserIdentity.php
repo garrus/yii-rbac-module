@@ -120,6 +120,12 @@ class SrbacUserIdentity extends CComponent implements IUserIdentity{
 		} else {
 			return [];
 		}
+	}
 
+	/**
+	 * @return SrbacUser
+	 */
+	public function getUser(){
+		return $this->user;
 	}
 }

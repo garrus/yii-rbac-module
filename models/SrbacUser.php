@@ -18,6 +18,7 @@
  * @property boolean $isPasswordModified
  *
  * @property Assignments[] $assignments
+ * @property SrbacDynamicPass[] $dynamicPasses
  */
 class SrbacUser extends CActiveRecord
 {
@@ -54,13 +55,15 @@ class SrbacUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name,displayName', 'required'),
+			array('name,displayName,email,stuff_no,mobile,password_plain,password_plain_confirm', 'filter', 'filter' => 'trim'),
+
+			array('name,displayName,email', 'required'),
 			array('name, stuff_no, mobile', 'length', 'max'=>15),
 			array('displayName', 'length', 'max'=>32),
 			array('email', 'length', 'max'=>63),
 			array('email', 'email'),
 			array('mobile', 'length', 'max' => 15),
-			array('password_plain', 'length', 'min' => 6, 'allowEmpty' => false),
+			array('password_plain', 'validatePasswordStrength'),
 			array('password_plain_confirm', 'compare', 'compareAttribute' => 'password_plain'),
 
 			array('name,email,mobile,stuff_no', 'unique'),
@@ -68,6 +71,38 @@ class SrbacUser extends CActiveRecord
 			// Please remove those attributes that should not be searched.
 			array('id, name, displayName, stuff_no, email, mobile', 'safe', 'on'=>'search'),
 		);
+	}
+
+	/**
+	 * Validate password's strength
+	 */
+	public function validatePasswordStrength(){
+
+		if ($this->hasErrors()) return;
+
+		$pass = $this->password_plain;
+		if (empty($pass)) {
+			$this->addError('password_plain', '密码不能为空');
+			return;
+		}
+		if (strlen($pass) < 8) {
+			$this->addError('password_plain', '密码过于简单。长度不能低于8位。');
+			return;
+		}
+		$chars = count_chars($pass, 3); // 返回由所有使用了的字节值组成的字符串
+		if (strlen($chars) < 3) {
+			$this->addError('password_plain', '密码过于简单。所用字符数不能低于3个。');
+		}
+
+		$chars = preg_replace('/[0-9]/', '', $chars, -1, $numberCharCount);
+		$chars = preg_replace('/[a-zA-Z]/', '', $chars, -1, $alphaCharCount);
+		$specialCharCount = strlen($chars);
+		if (($numberCharCount == 0 && $alphaCharCount == 0) ||
+			($numberCharCount == 0 && $specialCharCount == 0) ||
+			($alphaCharCount == 0 && $specialCharCount == 0)) {
+			$this->addError('password_plain', '密码过于简单。必须包含数字、字母和特殊字符中的两种及以上。');
+		}
+
 	}
 
 	/**
@@ -102,6 +137,7 @@ class SrbacUser extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'assignments' => [self::HAS_MANY, 'Assignments', 'userid'],
+			'dynamicPasses' => [self::HAS_MANY, 'SrbacDynamicPass', 'user_id', 'index' => 'type'],
 		);
 	}
 
@@ -173,12 +209,36 @@ class SrbacUser extends CActiveRecord
 	}
 
 	/**
+	 * @param string $type
+	 */
+	public function createDynamicPassword($type=SrbacDynamicPass::TYPE_EMAIL){
+		SrbacDynamicPass::generateForUser($this, $type);
+		unset($this->dynamicPasses); // unset related records
+	}
+
+	/**
 	 *
 	 */
 	protected function afterSave(){
 		if ($this->update_time instanceof CDbExpression ||
 			$this->create_time instanceof CDbExpression) {
 			$this->refresh();
+		}
+	}
+
+	/**
+	 * @param string $pass
+	 * @param string $type
+	 * @return bool
+	 */
+	public function validateDynamicPassword($pass, $type=SrbacDynamicPass::TYPE_EMAIL){
+		$relations = $this->dynamicPasses;
+		if (isset($relations[$type])) {
+			$record = $relations[$type];
+			$record->user = $this;
+			return $record->validatePassword($pass);
+		} else {
+			return false;
 		}
 	}
 

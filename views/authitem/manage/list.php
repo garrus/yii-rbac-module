@@ -103,7 +103,7 @@ ob_start();
 </th>
 <th><?php echo Helper::translate('srbac', 'Name'); ?></th>
 <th><?php echo Helper::translate('srbac', 'Description'); ?></th>
-<th class="text-center"></th>
+<th style="width: 100px;"></th>
 </tr>
 <?php $header = ob_get_clean();
 $this->widget('zii.widgets.CListView', [
@@ -113,29 +113,25 @@ $this->widget('zii.widgets.CListView', [
 	'template' => '<table class="table table-hover table-condensed table-striped" id="auth-item-list">
 	<thead>'. $header. '</thead>
 	<tbody>{items}</tbody>
-</table>',
+</table>{pager}',
+	'pagerCssClass' => '',
+	'pager' => [
+		'class' => 'CLinkPager',
+		'htmlOptions' => ['class' => 'pagination'],
+		'header' => '<nav>',
+		'footer' => '</nav>',
+		'firstPageCssClass' => '',
+		'lastPageCssClass' => '',
+		'previousPageCssClass' => '',
+		'nextPageCssClass' => '',
+		'internalPageCssClass' => '',
+		'hiddenPageCssClass' => 'disabled',
+		'selectedPageCssClass' => 'active',
+		'prevPageLabel' => '上一页',
+		'nextPageLabel' => '下一页',
+		'firstPageLabel' => '&laquo;',
+		'lastPageLabel' => '&raquo;',
+	]
 ]);
-?>
-<div class="simple">
-<?php $this->widget('system.web.widgets.pagers.CLinkPager', [
-	'pages' => $dataProvider->pagination,
-	'htmlOptions' => [
-		'class' => 'pagination',
-	],
-	'header' => '<nav>',
-	'footer' => '</nav>',
-	'firstPageCssClass' => '',
-	'lastPageCssClass' => '',
-	'previousPageCssClass' => '',
-	'nextPageCssClass' => '',
-	'internalPageCssClass' => '',
-	'hiddenPageCssClass' => 'disabled',
-	'selectedPageCssClass' => 'active',
-	'prevPageLabel' => '上一页',
-	'nextPageLabel' => '下一页',
-	'firstPageLabel' => '&laquo;',
-	'lastPageLabel' => '&raquo;',
-]);?>
-</div>
-<?php echo SHtml::endForm(); ?>
+echo SHtml::endForm(); ?>
 <br/>

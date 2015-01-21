@@ -74,6 +74,12 @@
 					""),
 				array('user/index'));?>
 		</div>
+		<div class="iconBox pull-right">
+		<?php echo CHtml::link('注销 '.Yii::app()->user->name, ['/srbac/user/logout'], [
+			'class' => 'pull-right',
+			'style' => 'line-height: 32px; padding: 0 10px; background-color: lightsteelblue;'
+		]);?>
+		</div>
     </div>
     <div class="reset"></div>
 </div>

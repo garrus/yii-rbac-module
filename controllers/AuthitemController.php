@@ -529,7 +529,8 @@ class AuthitemController extends SBaseController {
             Yii::app()->user->setState("currentPage", Yii::app()->request->getParam('page', 0) - 1);
         }
 
-
+		$full = Yii::app()->request->getParam('full');
+		unset($_GET['full']);
 		$dataProvider = new CActiveDataProvider('AuthItem', [
 			'criteria' => $criteria,
 			'pagination' => [
@@ -543,7 +544,7 @@ class AuthitemController extends SBaseController {
 			]
 		]);
 
-        $full = Yii::app()->request->getParam("full");
+
         if ($isAjaxRequest && !$full) {
             $this->renderPartial('manage/list', array(
                 'dataProvider' => $dataProvider,
@@ -553,7 +554,7 @@ class AuthitemController extends SBaseController {
             $this->renderPartial('manage/manage', array(
 				'dataProvider' => $dataProvider,
                 'full' => $full,
-            ), false, false);
+            ), false, true);
         } else {
             $this->render('manage/manage', array(
 				'dataProvider' => $dataProvider,

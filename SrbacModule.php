@@ -84,6 +84,8 @@ class SrbacModule extends CWebModule {
 
 	public $backendHomeUrl = '/M/index';
 
+	public $mailer = [];
+
     /**
      * this method is called when the module is being created you may place code
      * here to customize the module or the application
@@ -98,15 +100,39 @@ class SrbacModule extends CWebModule {
         ));
         //Create the translation component
         $this->setComponents(
-            array(
-                'tr' => array(
+            [
+                'tr' => [
                     'class' => 'CPhpMessageSource',
                     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'messages',
-                    'onMissingTranslation' => "Helper::markWords"
-                ),
-            )
+                    'onMissingTranslation' => "Helper::markWords",
+                ],
+            ]
         );
     }
+
+	public function getMailer(){
+
+		if ($this->hasComponent('mailer')) {
+			return $this->getComponent('mailer');
+		}
+
+		if ($this->mailer) {
+			if (is_string($this->mailer)) {
+				return Yii::app()->getComponent($this->mailer);
+			} elseif (is_array($this->mailer)) {
+				$this->setComponent('mailer', [
+					'class' => 'srbac.extensions.MultiMailer.MultiMailer',
+					'setFromAddress' => 'register@oppo.com',
+					'setFromName' => 'OPPO',
+					'setMethod' => 'SMTP',
+					'setOptions' => $this->mailer,
+				]);
+				return $this->getComponent('mailer');
+			}
+		}
+
+		throw new Exception('SrbacModule.mailer is not config. No mailer component is available.');
+	}
 
 	public function getAssetsUrl(){
 

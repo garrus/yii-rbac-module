@@ -14,7 +14,7 @@
 	<?php echo $form->errorSummary($model, '', null, ['class' => 'alert alert-danger']); ?>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'name'); ?>
+		<?php echo $form->labelEx($model,'name',['class' => 'control-label col-md-2']); ?>
 		<?php if ($model->isNewRecord):
 			echo $form->textField($model,'name',array('size'=>15, 'maxlength'=>15, 'required' => 'required', 'class' => 'form-control'));
 			echo '<div class="field-desc text-info">必填</div>';
@@ -25,42 +25,42 @@
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'password_plain'); ?>
+		<?php echo $form->labelEx($model,'password_plain',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->passwordField($model,'password_plain',array('size'=>15, 'required' => 'required', 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">必填</div>
 		<?php echo $form->error($model,'password_plain', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'password_plain_confirm'); ?>
+		<?php echo $form->labelEx($model,'password_plain_confirm',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->passwordField($model,'password_plain_confirm',array('size'=>15, 'required' => 'required', 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">必填</div>
 		<?php echo $form->error($model,'password_plain_confirm', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'displayName'); ?>
+		<?php echo $form->labelEx($model,'displayName',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->textField($model,'displayName',array('size'=>15,'maxlength'=>32, 'required' => 'required', 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">必填</div>
 		<?php echo $form->error($model,'displayName', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'email'); ?>
+		<?php echo $form->labelEx($model,'email',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->textField($model,'email',array('size'=>15,'maxlength'=>63, 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">可作为登录名使用</div>
 		<?php echo $form->error($model,'email', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'mobile'); ?>
+		<?php echo $form->labelEx($model,'mobile',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->textField($model,'mobile',array('size'=>15,'maxlength'=>15, 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">可作为登录名使用</div>
 		<?php echo $form->error($model,'mobile', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 
 	<div class="form-group col-md-12">
-		<?php echo $form->labelEx($model,'stuff_no'); ?>
+		<?php echo $form->labelEx($model,'stuff_no',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->textField($model,'stuff_no',array('size'=>15,'maxlength'=>15, 'class' => 'form-control')); ?>
 		<div class="field-desc text-info">可作为登录名使用</div>
 		<?php echo $form->error($model,'stuff_no', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>

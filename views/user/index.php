@@ -26,22 +26,21 @@ $this->renderPartial('/authitem/frontpage');
 		'displayName',
 		'name',
 		[
-			'header' => '角色',
-			'value' => 'implode("<br>", $data->getRoleNames())',
+			'name' => 'email',
+			'value' => 'CHtml::link($data->email, "mailto://". $data->email)',
 			'type' => 'raw',
 		],
 		'stuff_no',
 		'mobile',
 		[
-			'name' => 'email',
-			'value' => 'CHtml::link($data->email, "mailto://". $data->email)',
+			'header' => '角色',
+			'value' => 'implode("<br>", $data->getRoleNames())',
 			'type' => 'raw',
 		],
 		[
 			'name' => 'create_time',
 			'filter' => false,
 		],
-
 		[
 			'class' => 'CButtonColumn',
 			'template' => '{update} {delete}',

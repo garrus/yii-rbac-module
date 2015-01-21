@@ -6,7 +6,7 @@ class UserController extends SBaseController{
 
 	public $menu = [];
 	public $layout = '/layouts/bootstrap';
-	public $guestAccessible = ['login', 'logout', 'register'];
+	public $guestAccessible = ['login', 'logout', 'register', 'quickLogin'];
 
 	public function init(){
 		$this->checkInstallation();
@@ -32,20 +32,29 @@ class UserController extends SBaseController{
 
 	private function checkInstallation(){
 
-		$tableExists = false;
 		$adminUser = false;
+
 		try {
 			$adminUser = Yii::app()->db->createCommand('select * from '. $this->module->usertable .' where name=:name')
 				->queryRow(true, ['name' => SrbacUser::SA_NAME]);
-			$tableExists = true;
 		} catch (CDbException $e) {
 			if (strpos($e->getMessage(), 'table or view not found') === false) {
 				throw new CHttpException(500, $e->getMessage());
+			} else {
+				$this->createUserTable();
 			}
 		}
-		if (!$tableExists) {
-			$this->createUserTable();
+
+		try {
+			Yii::app()->db->createCommand('delete from srbac_dynamic_pass where expire_time<:time')->execute([':time' => time()]);
+		} catch (CDbException $e) {
+			if (strpos($e->getMessage(), 'table or view not found') === false) {
+				throw new CHttpException(500, $e->getMessage());
+			} else {
+				$this->createDynamicPassTable();
+			}
 		}
+
 		if (!$adminUser) {
 			Helper::install(1, 0);
 			$info = $this->createAdminUser();
@@ -73,12 +82,32 @@ class UserController extends SBaseController{
 			'create_time' => 'timestamp not null default 0',
 			'update_time' => 'timestamp not null default 0 on update CURRENT_TIMESTAMP',
 			'Primary Key(`id`)',
-		]);
+		], 'Engine=InnoDb Default Charset=utf8');
 
 		$db->createCommand()->createIndex('user_name', $tableName, 'name', true);
 		$db->createCommand()->createIndex('user_stuff_no', $tableName, 'stuff_no', true);
 		$db->createCommand()->createIndex('user_email', $tableName, 'email', true);
 		$db->createCommand()->createIndex('user_mobile', $tableName, 'mobile', true);
+
+	}
+
+	private function createDynamicPassTable(){
+		$db = Yii::app()->db;
+		$tableName = 'srbac_dynamic_pass';
+		$db->createCommand()->createTable($tableName, [
+			'id' => 'int(11) unsigned auto_increment',
+			'user_id' => 'int(11) unsigned not null',
+			'type' => 'varchar(15) not null',
+			'password' => 'char(32) not null',
+			'expire_time' => 'int(11) not null default 0',
+			'create_time' => 'timestamp not null default CURRENT_TIMESTAMP',
+
+			'Primary Key (`id`)',
+		], 'Engine=InnoDb Default Charset=utf8');
+
+		$db->createCommand()->createIndex('dynamic_pass_user_credential', $tableName, 'user_id,type', true);
+		$db->createCommand()->createIndex('dynamic_pass_expire_time', $tableName, 'expire_time');
+		$db->createCommand()->addForeignKey('dynamic_pass_fk_user', $tableName, 'user_id', $this->getSrbac()->usertable, 'id', 'CASCADE', 'CASCADE');
 	}
 
 	/**
@@ -255,21 +284,107 @@ class UserController extends SBaseController{
 	 */
 	public function actionLogin(){
 
+		/**
+		 * @var CHttpRequest $req
+		 * @var CHttpSession $session
+		 */
 		$req = Yii::app()->request;
+		$session = Yii::app()->session;
+		$dynamicPassword = $req->getPost('dynamic_password');
+
 		$form = new SrbacLoginForm();
 
 		if (isset($_POST['SrbacLoginForm'])) {
 			$form->attributes = $_POST['SrbacLoginForm'];
-			if ($form->validate() && $form->login()) {
-				if (Yii::app()->user->name == 'administrator') {
-					$req->redirect('index');
+			if ($form->validate()) {
+				$session['password_validated'] = $form->getUserId();
+				if ($dynamicPassword) {
+					if ($form->validateDynamicPassword($dynamicPassword) && $form->login()) {
+						$this->afterLogin();
+					}
 				} else {
-					$req->redirect($this->module->backendHomeUrl);
+					$error = 0;
+					try {
+						$form->sendDynamicPassword();
+					} catch (Exception $e) {
+						$error = 1;
+						if ($req->isAjaxRequest) {
+							echo json_encode([
+								'ret' => 1, 'msg' => $e->getMessage(),
+							]);
+							Yii::app()->end();
+						} else {
+							Yii::app()->user->setFlash('error', $e->getMessage());
+						}
+					}
+
+					if (!$error) {
+						if ($req->isAjaxRequest) {
+							echo json_encode([
+								'ret' => 0, 'msg' => '一封包含动态密码的邮件已发送到您的邮箱，请填入动态密码以完成登录。',
+							]);
+							Yii::app()->end();
+						} else {
+							Yii::app()->user->setFlash('success', '一封包含动态密码的邮件已发送到您的邮箱，请填入动态密码以完成登录。');
+						}
+					}
 				}
 			}
 		}
 
-		$this->render('login', ['model' => $form]);
+		if ($req->isAjaxRequest) {
+			if ($form->hasErrors()) {
+				$firstError = '';
+				foreach ($form->getErrors() as $errors) {
+					$firstError = $errors[0];
+					break;
+				}
+				echo json_encode([
+					'ret' => 1, 'msg' => $firstError
+				]);
+			} else {
+				echo json_encode(['ret' => 0, 'msg' => '']);
+			}
+			Yii::app()->end();
+		} else {
+			$this->render('login', [
+				'model' => $form,
+				'dynamicPassword' => $dynamicPassword,
+			]);
+		}
+	}
+
+	private function afterLogin(){
+		if (Yii::app()->user->name == 'administrator') {
+			$this->redirect(['index']);
+		} else {
+			$this->redirect($this->module->backendHomeUrl);
+		}
+		Yii::app()->end(); // actually this line is not necessary
+	}
+
+	public function actionQuickLogin($email=null, $code=null){
+
+		/**
+		 * @var CHttpRequest $req
+		 * @var CHttpSession $session
+		 */
+		$session = Yii::app()->session;
+
+		if (!empty($session['password_validated']) && $email && $code) {
+			/** @var SrbacUser $user */
+			$user = SrbacUser::model()->findByAttributes(['email' => $email]);
+			if ($user !== null &&
+				$user->id == $session['password_validated'] &&
+				$user->validateDynamicPassword($code, SrbacDynamicPass::TYPE_EMAIL)
+			) {
+				Yii::app()->user->login(SrbacUserIdentity::createTrusted($user), 86400);
+				$this->afterLogin();
+			}
+		}
+
+		Yii::app()->user->setFlash('warning', '此链接已过期。我们需要重新验证您的用户名和密码。');
+		$this->redirect(['login']);
 	}
 
 	public function actionChangePassword($name=null, $id=null){

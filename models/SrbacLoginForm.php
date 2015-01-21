@@ -14,6 +14,9 @@ class SrbacLoginForm extends CFormModel{
 	public $mobile;
 	public $password;
 
+	/** @var  SrbacUserIdentity */
+	private $_ui;
+
 	public function rules(){
 		return [
 			['password', 'required'],
@@ -26,6 +29,71 @@ class SrbacLoginForm extends CFormModel{
 		return SrbacUser::model()->attributeLabels();
 	}
 
+	protected function beforeValidate(){
+		$this->_ui = null;
+		return parent::beforeValidate();
+	}
+
+	protected function afterValidate(){
+		if (!$this->hasErrors()) {
+			$this->getUserIdentity();
+		}
+		$this->password = null;
+	}
+
+	/**
+	 * @return SrbacUserIdentity
+	 */
+	protected function createUserIdentity(){
+		return new SrbacUserIdentity([
+			'name' => $this->name,
+			'stuff_no' => $this->stuff_no,
+			'email' => $this->email,
+			'mobile' => $this->mobile,
+		], $this->password);
+	}
+
+	/**
+	 * @return SrbacUserIdentity
+	 */
+	private function getUserIdentity(){
+		if (!$this->_ui) {
+			$this->_ui = $ui = $this->createUserIdentity();
+			if (!$ui->authenticate()) {
+				$this->addError('', $ui->errorMessage);
+			}
+		}
+		return $this->_ui;
+	}
+
+	public function sendDynamicPassword(){
+
+		$ui = $this->getUserIdentity();
+		if ($ui->getIsAuthenticated()) {
+			$ui->getUser()->createDynamicPassword();
+		}
+	}
+
+	/**
+	 * @param string $pass
+	 * @return bool
+	 */
+	public function validateDynamicPassword($pass){
+
+		if ($this->hasErrors()) {
+			return false;
+		}
+		$ui = $this->getUserIdentity();
+		if ($ui->getIsAuthenticated()) {
+			$user = $ui->getUser();
+			if (!$user->validateDynamicPassword($pass)) {
+				$this->addError('dynamic_password', '动态密码验证失败。');
+			}
+		}
+
+		return !$this->hasErrors();
+	}
+
 	/**
 	 * @return boolean
 	 */
@@ -34,21 +102,21 @@ class SrbacLoginForm extends CFormModel{
 		if ($this->hasErrors()) {
 			return false;
 		}
-
-		$userIdentity = new SrbacUserIdentity([
-			'name' => $this->name,
-			'stuff_no' => $this->stuff_no,
-			'email' => $this->email,
-			'mobile' => $this->mobile,
-		], $this->password);
-
-		if ($userIdentity->authenticate()) {
-			Yii::app()->user->login($userIdentity, 86400);
-		} else {
-			$this->addError('', $userIdentity->errorMessage);
+		$ui = $this->getUserIdentity();
+		if ($ui->getIsAuthenticated()) {
+			Yii::app()->user->login($this->_ui, 86400);
 		}
 
 		return !$this->hasErrors();
+	}
+
+	public function getUserId(){
+		$ui = $this->getUserIdentity();
+		if ($ui->getIsAuthenticated()) {
+			return $ui->getId();
+		} else {
+			return null;
+		}
 	}
 
 } 
