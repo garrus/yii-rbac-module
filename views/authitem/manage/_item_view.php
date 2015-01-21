@@ -5,6 +5,7 @@
  */
 ?>
 <tr class="<?php echo $index % 2 ? 'even' : 'odd'; ?>">
+	<td class="text-center"><?php echo SHtml::encode(AuthItem::$TYPE_LABELS[$data->type]); ?></td>
 	<td><?php
 		echo SHtml::ajaxLink($data->name,
 			array('show', 'id' => $data->name),
@@ -14,8 +15,9 @@
 			), array("title" => $data->description ? $data->description : $data->name)
 		);
 		?></td>
-	<td><?php echo SHtml::encode(AuthItem::$TYPES[$data->type]); ?></td>
-	<td class="text-center">
+	<td><?php echo $data->description;?></td>
+
+	<td class="text-right">
 		<?php
 		echo SHtml::ajaxLink(
 			Helper::translate('srbac', 'Update'),

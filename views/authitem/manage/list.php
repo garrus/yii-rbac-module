@@ -15,21 +15,13 @@
  * @var CActiveDataProvider $dataProvider
  */
 ?>
-<?php if (Yii::app()->user->hasFlash('updateName')): ?>
-    <div id="messageUpd"
-         style="color:red;font-weight:bold;font-size:14px;text-align:center
-       ;position:relative;border:solid black 2px;background-color:#DDDDDD"
-        >
-        <?php echo Yii::app()->user->getFlash('updateName'); ?>
-        <?php
-        Yii::app()->clientScript->registerScript(
-            'myHideEffect',
-            '$("#messageUpd").animate({opacity: 0}, 2000).fadeOut(500);',
-            CClientScript::POS_READY
-        );
-        ?>
-    </div>
-<?php endif; ?>
+<?php if (Yii::app()->user->hasFlash('updateName')):
+	Yii::app()->clientScript->registerScript(
+		'myHideEffect',
+		'noty({type: "info", "timeout": 5000, "layout": "topCenter", "text": '. json_encode(Yii::app()->user->getFlash('updateName')).'})',
+		CClientScript::POS_READY
+	);
+endif; ?>
 <?php echo SHtml::beginForm(); ?>
 <div class="well well-sm">
         <?php
@@ -90,11 +82,10 @@
 ob_start();
 ?>
 <tr>
-	<th><?php echo Helper::translate('srbac', 'Name'); ?></th>
-<th>
+<th style="width: 80px;">
 	<?php
 	echo SHtml::dropDownList('selectedType', Yii::app()->user->getState("selectedType"),
-		AuthItem::$TYPES,
+		AuthItem::$TYPE_LABELS,
 		array(
 			'prompt' => Helper::translate('srbac', 'All'),
 			'live' => false,
@@ -110,7 +101,9 @@ ob_start();
 	);
 	?>
 </th>
-<th class="text-center"><?php echo Helper::translate('srbac', 'Actions') ?></th>
+<th><?php echo Helper::translate('srbac', 'Name'); ?></th>
+<th><?php echo Helper::translate('srbac', 'Description'); ?></th>
+<th class="text-center"></th>
 </tr>
 <?php $header = ob_get_clean();
 $this->widget('zii.widgets.CListView', [

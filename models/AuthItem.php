@@ -25,6 +25,7 @@ class AuthItem extends CActiveRecord {
 
 
     public static $TYPES = array('Operation', 'Task', 'Role');
+	public static $TYPE_LABELS = array('操作', '任务', '角色');
     public $oldName;
 
     public function getDbConnection() {

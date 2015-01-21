@@ -127,7 +127,7 @@
      <br/>
 <div id="wizard" class="row">
 	<?php endif; ?>
-	<div class="col-md-6">
+	<div class="col-md-7">
 		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate("srbac", "Auth items"); ?></h3>
 		<div id="list">
 			<?php echo $this->renderPartial('manage/list', array(
@@ -136,8 +136,8 @@
 		</div>
 	</div>
 
-	<div class="col-md-6">
-		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate('srbac', 'Actions') ?></h3>
+	<div class="col-md-5">
+		<h3 class="text-center" style="margin-top: 0; color: transparent;">动作</h3>
 		<div id="preview"></div>
 	</div>
 <?php if (!$full) :?>

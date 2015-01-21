@@ -586,8 +586,9 @@ class AuthitemController extends SBaseController {
             $r_id = urldecode(Yii::app()->getRequest()->getParam("id", ""));
             if ($id !== null || $r_id != "")
                 $this->_model = AuthItem::model()->findbyPk($id !== null ? $id : $r_id);
-            if ($this->_model === null)
-                throw new CHttpException(404, 'The requested page does not exist.');
+            if ($this->_model === null) {
+				throw new CHttpException(404, 'The requested page does not exist. id = '. $id);
+			}
         }
         return $this->_model;
     }

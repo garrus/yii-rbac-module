@@ -14,6 +14,7 @@
  * @since 1.0.0
  */
 ?>
+<h3 class="text-center"><?php echo Helper::translate('srbac', 'Update AuthItem'); ?></h3>
 <?php echo $this->renderPartial('manage/_form', array(
     'model' => $model,
     'update' => true,

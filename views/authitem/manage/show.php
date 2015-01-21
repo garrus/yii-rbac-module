@@ -32,7 +32,7 @@
 		'attributes' => [
 			[
 				'name' => 'type',
-				'value' => AuthItem::$TYPES[$model->type],
+				'value' => AuthItem::$TYPE_LABELS[$model->type],
 			],
 			'description',
 			'bizrule',
