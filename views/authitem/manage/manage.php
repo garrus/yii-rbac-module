@@ -126,27 +126,20 @@
      </div>
      <br/>
 <?php endif; ?>
-<div id="wizard">
-     <table class="srbacDataGrid" align="center">
-          <tr>
-               <th width="50%"><?php echo Helper::translate("srbac", "Auth items"); ?></th>
-               <th><?php echo Helper::translate('srbac', 'Actions') ?></th>
-          </tr>
-          <tr>
-               <td style="vertical-align: top;text-align: center">
-                    <div id="list">
-                         <?php echo $this->renderPartial('manage/list', array(
-                              'models' => $models,
-                              'pages' => $pages,
-                              'sort' => $sort,
-                         )); ?>
-                    </div>
-               </td>
-               <td style="vertical-align: top;text-align: center">
-                    <div id="preview"></div>
-               </td>
-          </tr>
-     </table>
+<div id="wizard" class="row">
+	<div class="col-md-6">
+		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate("srbac", "Auth items"); ?></h3>
+		<div id="list">
+			<?php echo $this->renderPartial('manage/list', array(
+				'dataProvider' => $dataProvider,
+			)); ?>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate('srbac', 'Actions') ?></h3>
+		<div id="preview"></div>
+	</div>
 </div>
 <?php if (!$full) {
      if ($this->module->getShowFooter()) {

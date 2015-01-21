@@ -16,7 +16,7 @@
  */
 ?>
 <?php if ($updateList) : ?>
-    <script language="javascript">
+    <script type="text/javascript">
         <?php echo SHtml::ajax(array(
           'type'=>'POST',
           'url'=>array('manage'),
@@ -26,24 +26,21 @@
 <?php else : ?>
     <h2><?php echo $model->name; ?></h2>
 
-    <table class="srbacDataGrid">
-        <tr>
-            <th class="label"><?php echo SHtml::encode($model->getAttributeLabel('type')); ?></th>
-            <td><?php echo SHtml::encode(AuthItem::$TYPES[$model->type]); ?></td>
-        </tr>
-        <tr>
-            <th class="label"><?php echo SHtml::encode($model->getAttributeLabel('description')); ?></th>
-            <td><?php echo SHtml::encode($model->description); ?></td>
-        </tr>
-        <tr>
-            <th class="label"><?php echo SHtml::encode($model->getAttributeLabel('bizrule')); ?></th>
-            <td><?php echo SHtml::encode($model->bizrule); ?></td>
-        </tr>
-        <tr>
-            <th class="label"><?php echo SHtml::encode($model->getAttributeLabel('data')); ?></th>
-            <td><?php echo SHtml::encode($model->data); ?></td>
-        </tr>
-    </table>
+	<?php
+	$this->widget('zii.widgets.CDetailView', [
+		'data' => $model,
+		'attributes' => [
+			[
+				'name' => 'type',
+				'value' => AuthItem::$TYPES[$model->type],
+			],
+			'description',
+			'bizrule',
+			'data'
+		]
+	]);
+	?>
+
     <div class="simple">
         <?php if ($delete) : ?>
             <?php echo Helper::translate('srbac', 'Really delete') ?> <?php echo $model->name; ?> ?
@@ -52,7 +49,7 @@
                 array(
                     'type' => 'POST',
                     'update' => '#preview'
-                ), array('id' => 'deleteButton')) ?>
-        <?php endif ?>
+                ), array('id' => 'deleteButton', 'class' => 'btn btn-danger btn-sm')); ?>
+        <?php endif; ?>
     </div>
-<?php endif ?>
+<?php endif;

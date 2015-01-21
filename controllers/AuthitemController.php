@@ -338,10 +338,12 @@ class AuthitemController extends SBaseController {
         $deleted = Yii::app()->request->getParam('deleted', false);
         $delete = Yii::app()->request->getParam('delete', false);
         $model = $this->loadAuthItem();
-        $this->renderPartial('manage/show', array('model' => $model,
+        $this->renderPartial('manage/show', [
+			'model' => $model,
             'deleted' => $deleted,
             'updateList' => false,
-            'delete' => $delete));
+            'delete' => $delete
+		], false, true);
     }
 
     /**
@@ -463,15 +465,19 @@ class AuthitemController extends SBaseController {
         if ($selectedType != "") {
             $criteria->condition .= " AND type = " . $selectedType;
         }
-        $pages = new CPagination(AuthItem::model()->count($criteria));
-        $pages->pageSize = $this->module->pageSize;
-        $pages->applyLimit($criteria);
-        $pages->route = "manage";
-        $pages->setCurrentPage(Yii::app()->user->getState("currentPage"));
-        $models = AuthItem::model()->findAll($criteria);
+
+		$dataProvider = new CActiveDataProvider('AuthItem', [
+			'criteria' => $criteria,
+			'pagination' => [
+				'pageSize' => $this->module->pageSize,
+				'route' => 'manage',
+				'pageVar' => 'page',
+				'currentPage' => Yii::app()->user->getState('currentPage'),
+			]
+		]);
+
         $this->renderPartial('manage/list', array(
-            'models' => $models,
-            'pages' => $pages,
+			'dataProvider' => $dataProvider,
         ), false, true);
     }
 
@@ -524,36 +530,33 @@ class AuthitemController extends SBaseController {
         }
 
 
-        $pages = new CPagination(AuthItem::model()->count($criteria));
-        $pages->route = "manage";
-        $pages->pageSize = $this->module->pageSize;
-        $pages->applyLimit($criteria);
-        $pages->setCurrentPage(Yii::app()->user->getState('currentPage'));
+		$dataProvider = new CActiveDataProvider('AuthItem', [
+			'criteria' => $criteria,
+			'pagination' => [
+				'route' => 'manage',
+				'pageSize' => $this->module->pageSize,
+				'currentPage' => Yii::app()->user->getState('currentPage'),
+				'pageVar' => 'page',
+			],
+			'sort' => [
+				'attributes' => ['name', 'type'],
+			]
+		]);
 
-        $sort = new CSort('AuthItem');
-        $sort->applyOrder($criteria);
-
-        $models = AuthItem::model()->findAll($criteria);
         $full = Yii::app()->request->getParam("full");
         if ($isAjaxRequest && !$full) {
             $this->renderPartial('manage/list', array(
-                'models' => $models,
-                'pages' => $pages,
-                'sort' => $sort,
+                'dataProvider' => $dataProvider,
                 'full' => $full,
             ), false, true);
         } else if ($isAjaxRequest && $full) {
             $this->renderPartial('manage/manage', array(
-                'models' => $models,
-                'pages' => $pages,
-                'sort' => $sort,
-                'full' => $full
+				'dataProvider' => $dataProvider,
+                'full' => $full,
             ), false, false);
         } else {
             $this->render('manage/manage', array(
-                'models' => $models,
-                'pages' => $pages,
-                'sort' => $sort,
+				'dataProvider' => $dataProvider,
                 'full' => $full,
             ));
         }
