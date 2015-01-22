@@ -10,6 +10,9 @@ $this->renderPartial('/authitem/frontpage');
 
 <p>
 	<?php echo CHtml::link('<strong>+</strong> 创建新用户', ['create'], ['class' => 'btn btn-success']);?>
+	<?php if (Yii::app()->user->name == SrbacUser::SA_NAME):?>
+	<?php echo CHtml::link('修改管理员密码', ['/srbac/user/changePassword'], ['class' => 'btn btn-warning', 'target' => '__blank']);?>
+	<?php endif;?>
 </p>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -51,6 +54,17 @@ $this->renderPartial('/authitem/frontpage');
 			'deleteButtonOptions' => ['class' => 'btn btn-xs btn-danger'],
 			'deleteButtonLabel' => '删除',
 			'deleteButtonImageUrl' => false,
+
+			'buttons' => [
+				'update' => [
+					'visible' => '!$data->isAdmin',
+				],
+				'delete' => [
+					'visible' => '!$data->isAdmin',
+				],
+			],
+
+
 		]
 	]
 ));

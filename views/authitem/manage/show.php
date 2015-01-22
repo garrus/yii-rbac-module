@@ -17,7 +17,7 @@
 ?>
 <?php if ($updateList) : ?>
     <script type="text/javascript">
-        <?php echo SHtml::ajax(array(
+        <?php echo SrbacHtml::ajax(array(
           'type'=>'POST',
           'url'=>array('manage'),
           'update'=>'#list',
@@ -43,8 +43,8 @@
 
     <div class="simple">
         <?php if ($delete) : ?>
-            <?php echo Helper::translate('srbac', 'Really delete') ?> <?php echo $model->name; ?> ?
-            <?php echo SHtml::ajaxButton(Helper::translate('srbac', 'Yes'),
+            <?php echo SrbacHelper::translate('srbac', 'Really delete') ?> <?php echo $model->name; ?> ?
+            <?php echo SrbacHtml::ajaxButton(SrbacHelper::translate('srbac', 'Yes'),
                 array('delete', 'id' => $model->name),
                 array(
                     'type' => 'POST',

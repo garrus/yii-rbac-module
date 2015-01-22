@@ -16,14 +16,14 @@
 ?>
 <table width="100%">
     <tr>
-        <th><?php echo Helper::translate('srbac', 'Assigned Operations') ?></th>
+        <th><?php echo SrbacHelper::translate('srbac', 'Assigned Operations') ?></th>
         <th>&nbsp;</th>
-        <th><?php echo Helper::translate('srbac', 'Not Assigned Operations') ?></th>
+        <th><?php echo SrbacHelper::translate('srbac', 'Not Assigned Operations') ?></th>
     </tr>
     <tr>
         <td width="45%">
-            <?php echo SHtml::activeDropDownList($model, 'name[revoke]',
-                SHtml::listData(
+            <?php echo SrbacHtml::activeDropDownList($model, 'name[revoke]',
+                SrbacHtml::listData(
                     $data['taskAssignedOpers'], 'name', 'name'),
                 array('size' => $this->module->listBoxNumberOfLines, 'multiple' => 'multiple', 'class' => 'dropdown')) ?>
         </td>
@@ -36,7 +36,7 @@
                     'beforeSend' => 'function(){$("#loadMessTask").addClass("srbacLoading");}',
                     'complete' => 'function(){$("#loadMessTask").removeClass("srbacLoading");}',
 				);
-            echo SHtml::ajaxSubmitButton('<<', array('assign', 'assignOpers' => 1), $ajax, $data['assign']); ?>
+            echo SrbacHtml::ajaxSubmitButton('<<', array('assign', 'assignOpers' => 1), $ajax, $data['assign']); ?>
             <?php
             $ajax =
                 array(
@@ -45,11 +45,11 @@
                     'beforeSend' => 'function(){$("#loadMessTask").addClass("srbacLoading");}',
                     'complete' => 'function(){$("#loadMessTask").removeClass("srbacLoading");}',
 				);
-            echo SHtml::ajaxSubmitButton('>>', array('assign', 'revokeOpers' => 1), $ajax, $data['revoke']); ?>
+            echo SrbacHtml::ajaxSubmitButton('>>', array('assign', 'revokeOpers' => 1), $ajax, $data['revoke']); ?>
         </td>
         <td width="45%">
-            <?php echo SHtml::activeDropDownList($model, 'name[assign]',
-                SHtml::listData(
+            <?php echo SrbacHtml::activeDropDownList($model, 'name[assign]',
+                SrbacHtml::listData(
                     $data['taskNotAssignedOpers'], 'name', 'name'),
                 array('size' => $this->module->listBoxNumberOfLines, 'multiple' => 'multiple', 'class' => 'dropdown')); ?>
         </td>

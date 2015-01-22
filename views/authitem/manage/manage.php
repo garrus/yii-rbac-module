@@ -29,15 +29,15 @@
      ?>
      <div id="wizardButton" style="text-align:left" class="controlPanel marginBottom">
           <?php
-		  echo SHtml::ajaxLink(
-               SHtml::image($this->module->getIconsPath() . '/admin.png',
-                    Helper::translate('srbac', 'Manage AuthItem'),
+		  echo SrbacHtml::ajaxLink(
+               SrbacHtml::image($this->module->getIconsPath() . '/admin.png',
+                    SrbacHelper::translate('srbac', 'Manage AuthItem'),
                     array('class' => 'icon',
-                         'title' => Helper::translate('srbac', 'Manage AuthItem'),
+                         'title' => SrbacHelper::translate('srbac', 'Manage AuthItem'),
                          'border' => 0
                     )
                ) . " " .
-               ($this->module->iconText ? Helper::translate('srbac', 'Manage AuthItem') : ""),
+               ($this->module->iconText ? SrbacHelper::translate('srbac', 'Manage AuthItem') : ""),
                array('manage', 'full' => true),
                array(
                     'type' => 'POST',
@@ -51,16 +51,16 @@
                )
           );
 
-		  echo SHtml::ajaxLink(
-               SHtml::image($this->module->getIconsPath() . '/wizard.png',
-                    Helper::translate('srbac', 'Autocreate Auth Items'),
+		  echo SrbacHtml::ajaxLink(
+               SrbacHtml::image($this->module->getIconsPath() . '/wizard.png',
+                    SrbacHelper::translate('srbac', 'Autocreate Auth Items'),
                     array('class' => 'icon',
-                         'title' => Helper::translate('srbac', 'Autocreate Auth Items'),
+                         'title' => SrbacHelper::translate('srbac', 'Autocreate Auth Items'),
                          'border' => 0
                     )
                ) . " " .
                ($this->module->iconText ?
-                    Helper::translate('srbac', 'Autocreate Auth Items') :
+                    SrbacHelper::translate('srbac', 'Autocreate Auth Items') :
                     ""),
                array('auto'),
                array(
@@ -75,16 +75,16 @@
                )
           );
 
-		  echo SHtml::ajaxLink(
-               SHtml::image($this->module->getIconsPath() . '/allow.png',
-                    Helper::translate('srbac', 'Edit always allowed list'),
+		  echo SrbacHtml::ajaxLink(
+               SrbacHtml::image($this->module->getIconsPath() . '/allow.png',
+                    SrbacHelper::translate('srbac', 'Edit always allowed list'),
                     array('class' => 'icon',
-                         'title' => Helper::translate('srbac', 'Edit always allowed list'),
+                         'title' => SrbacHelper::translate('srbac', 'Edit always allowed list'),
                          'border' => 0
                     )
                ) . " " .
                ($this->module->iconText ?
-                    Helper::translate('srbac', 'Edit always allowed list') :
+                    SrbacHelper::translate('srbac', 'Edit always allowed list') :
                     ""),
                array('editAllowed'),
                array(
@@ -99,16 +99,16 @@
                )
           );
 
-		  echo SHtml::ajaxLink(
-               SHtml::image($this->module->getIconsPath() . '/eraser.png',
-                    Helper::translate('srbac', 'Clear obsolete authItems'),
+		  echo SrbacHtml::ajaxLink(
+               SrbacHtml::image($this->module->getIconsPath() . '/eraser.png',
+                    SrbacHelper::translate('srbac', 'Clear obsolete authItems'),
                     array('class' => 'icon',
-                         'title' => Helper::translate('srbac', 'Clear obsolete authItems'),
+                         'title' => SrbacHelper::translate('srbac', 'Clear obsolete authItems'),
                          'border' => 0
                     )
                ) . " " .
                ($this->module->iconText ?
-                    Helper::translate('srbac', 'Clear obsolete authItems') :
+                    SrbacHelper::translate('srbac', 'Clear obsolete authItems') :
                     ""),
                array('clearObsolete'),
                array(
@@ -128,7 +128,7 @@
 <div id="wizard" class="row">
 	<?php endif; ?>
 	<div class="col-md-7">
-		<h3 class="text-center" style="margin-top: 0;"><?php echo Helper::translate("srbac", "Auth items"); ?></h3>
+		<h3 class="text-center" style="margin-top: 0;"><?php echo SrbacHelper::translate("srbac", "Auth items"); ?></h3>
 		<div id="list">
 			<?php echo $this->renderPartial('manage/list', array(
 				'dataProvider' => $dataProvider,

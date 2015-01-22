@@ -5,9 +5,9 @@
  */
 ?>
 <tr class="<?php echo $index % 2 ? 'even' : 'odd'; ?>">
-	<td class="text-center"><?php echo SHtml::encode(AuthItem::$TYPE_LABELS[$data->type]); ?></td>
+	<td class="text-center"><?php echo SrbacHtml::encode(AuthItem::$TYPE_LABELS[$data->type]); ?></td>
 	<td><?php
-		echo SHtml::ajaxLink($data->name,
+		echo SrbacHtml::ajaxLink($data->name,
 			array('show', 'id' => $data->name),
 			array('type' => 'POST', 'update' => '#preview',
 				'beforeSend' => 'function(){$("#preview").addClass("srbacLoading");}',
@@ -19,8 +19,8 @@
 
 	<td class="text-right">
 		<?php
-		echo SHtml::ajaxLink(
-			Helper::translate('srbac', 'Update'),
+		echo SrbacHtml::ajaxLink(
+			SrbacHelper::translate('srbac', 'Update'),
 //			SHtml::image($this->module->getIconsPath() . '/update.png',
 //				Helper::translate('srbac', 'Update'),
 //				array('border' => 0, 'title' => Helper::translate('srbac', 'Update'))),
@@ -33,9 +33,9 @@
 			),
 			['class' => 'btn btn-primary btn-xs']
 		);
-		if ($data->name != Helper::findModule('srbac')->superUser):
-			echo SHtml::ajaxLink(
-				Helper::translate('srbac', 'Delete'),
+		if ($data->name != SrbacHelper::findModule('srbac')->superUser):
+			echo SrbacHtml::ajaxLink(
+				SrbacHelper::translate('srbac', 'Delete'),
 //				SHtml::image($this->module->getIconsPath() . '/delete.png'
 //					, Helper::translate('srbac', 'Delete'),
 //					array('border' => 0, 'title' => Helper::translate('srbac', 'Delete'))),

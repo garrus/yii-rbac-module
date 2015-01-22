@@ -86,11 +86,17 @@ class SrbacModule extends CWebModule {
 
 	public $mailer = [];
 
+	public $adminEmail = '';
+
     /**
      * this method is called when the module is being created you may place code
      * here to customize the module or the application
      */
     public function init() {
+
+		if (!$this->adminEmail) {
+			throw new InvalidArgumentException('必须指定模块'. $this->id. '的adminEmail属性。');
+		}
 
         // import the module-level models and components
         $this->setImport(array(
@@ -370,7 +376,7 @@ class SrbacModule extends CWebModule {
 
     public function getMessage() {
         if ($this->_message != '') {
-            return Helper::translate('srbac', $this->_message);
+            return SrbacHelper::translate('srbac', $this->_message);
         } else {
             return '';
         }

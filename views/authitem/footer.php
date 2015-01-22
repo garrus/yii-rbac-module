@@ -18,7 +18,7 @@
 <p align="right">
     Yii Version <?php echo Yii::getVersion(); ?>,&nbsp;
     Srbac Version <?php echo $this->module->getVersion() ?> - Copyright &copy; 2009-2010 by
-    <?php echo SHtml::link("Spyros",
+    <?php echo SrbacHtml::link("Spyros",
         "http://www.yiiframework.com/forum/index.php?/user/1089-spyros/",
         array("target" => "_BLANK")
     ); ?>

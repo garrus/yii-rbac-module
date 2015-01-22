@@ -79,11 +79,11 @@ class AuthItem extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'name' => Helper::translate('srbac', 'Name'),
-            'type' => Helper::translate('srbac', 'Type'),
-            'description' => Helper::translate('srbac', 'Description'),
-            'bizrule' => Helper::translate('srbac', 'Bizrule'),
-            'data' => Helper::translate('srbac', 'Data'),
+            'name' => SrbacHelper::translate('srbac', 'Name'),
+            'type' => SrbacHelper::translate('srbac', 'Type'),
+            'description' => SrbacHelper::translate('srbac', 'Description'),
+            'bizrule' => SrbacHelper::translate('srbac', 'Bizrule'),
+            'data' => SrbacHelper::translate('srbac', 'Data'),
         );
     }
 
@@ -121,7 +121,7 @@ class AuthItem extends CActiveRecord {
             $criteria->condition = "child='" . $this->oldName . "'";
             ItemChildren::model()->updateAll(array('child' => $this->name), $criteria);
             Yii::app()->user->setFlash('updateName',
-                Helper::translate('srbac', 'Updating list'));
+                SrbacHelper::translate('srbac', 'Updating list'));
         }
     }
 

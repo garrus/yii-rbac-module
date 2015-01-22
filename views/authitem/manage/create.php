@@ -14,7 +14,7 @@
  * @since 1.0.0
  */
 ?>
-    <h3 class="text-center"><?php echo Helper::translate('srbac', 'Create New Item') ?></h3>
+    <h3 class="text-center"><?php echo SrbacHelper::translate('srbac', 'Create New Item') ?></h3>
 
 <?php echo $this->renderPartial('manage/_form', array(
     'model' => $model,

@@ -23,17 +23,17 @@
             <td width="40%" style="vertical-align: top">
                 <table class="srbacDataGrid" width="40%" align="left">
                     <tr>
-                        <th width="80%"><?php echo Helper::translate('srbac', 'Controller') ?></th>
-                        <th colspan="2"><?php echo Helper::translate('srbac', 'Actions') ?></th>
+                        <th width="80%"><?php echo SrbacHelper::translate('srbac', 'Controller') ?></th>
+                        <th colspan="2"><?php echo SrbacHelper::translate('srbac', 'Actions') ?></th>
                     </tr>
                     <?php $prevModule = ""; ?>
                     <?php foreach ($controllers as $n => $controller) { ?>
-                        <?php if (substr_count($controller, Helper::findModule('srbac')->delimeter)) { ?>
-                            <?php list($module, $controller) = explode(Helper::findModule('srbac')->delimeter, $controller); ?>
+                        <?php if (substr_count($controller, SrbacHelper::findModule('srbac')->delimeter)) { ?>
+                            <?php list($module, $controller) = explode(SrbacHelper::findModule('srbac')->delimeter, $controller); ?>
                             <?php if ($module != $prevModule) { ?>
                                 <tr>
                                     <th colspan="3">
-                                        <?php echo Helper::translate('srbac', 'Module') . ": " . $module ?></th>
+                                        <?php echo SrbacHelper::translate('srbac', 'Module') . ": " . $module ?></th>
                                 </tr>
                                 <?php $prevModule = $module; ?>
                             <?php } ?>
@@ -43,13 +43,13 @@
                             <td width="80%"><?php echo $controller ?></td>
                             <td>
                                 <?php
-                                echo SHtml::ajaxLink(
-                                    SHtml::image($this->module->getIconsPath() . '/wizard.png',
+                                echo SrbacHtml::ajaxLink(
+                                    SrbacHtml::image($this->module->getIconsPath() . '/wizard.png',
                                         "Autocreate Auth Items for controller " . $controller,
                                         array(
                                             'border' => 0,
                                             'title' =>
-                                                Helper::translate('srbac',
+                                                SrbacHelper::translate('srbac',
                                                     'Scanning for Auth Items for controller') . ' ' . $controller)
                                     ),
                                     array('scan', 'module' => $module, 'controller' => $controller),
@@ -65,11 +65,11 @@
                             </td>
                             <td>
                                 <?php
-                                echo SHtml::ajaxLink(
-                                    SHtml::image($this->module->getIconsPath() . '/delete.png',
+                                echo SrbacHtml::ajaxLink(
+                                    SrbacHtml::image($this->module->getIconsPath() . '/delete.png',
                                         "Delete All Auth Items of controller " . $controller,
                                         array('border' => 0, 'title' =>
-                                            Helper::translate('srbac',
+                                            SrbacHelper::translate('srbac',
                                                 'Delete All Auth Items of controller') . ' ' . $controller)
                                     ),
                                     array('scan', 'module' => $module, 'controller' => $controller, 'delete' => true),
@@ -90,7 +90,7 @@
             <td width="60%" style="vertical-align: top">
                 <table class="srbacDataGrid" width="50%" style="float:left">
                     <tr>
-                        <th width="70%"><?php echo Helper::translate('srbac', 'Auth items') ?></th>
+                        <th width="70%"><?php echo SrbacHelper::translate('srbac', 'Auth items') ?></th>
                     </tr>
                     <tr>
                         <td valign="top">

@@ -32,11 +32,11 @@ foreach ($controllers as $n => $controller) {
 
         $cont["tab_" . $n] = array(
             "title" => str_replace("Controller", "", $title),
-            "content" => SHtml::checkBoxList($title, $select, $data));
+            "content" => SrbacHtml::checkBoxList($title, $select, $data));
     }
 }
 ?>
-<?php echo SHtml::form(); ?>
+<?php echo SrbacHtml::form(); ?>
 <div class="col-md-6">
 	<div class="vertTab">
 		<?php
@@ -48,7 +48,7 @@ foreach ($controllers as $n => $controller) {
 		?>
 	</div>
 	<div class="action">
-		<?php echo SHtml::ajaxSubmitButton(Helper::translate("srbac", "Save"),
+		<?php echo SrbacHtml::ajaxSubmitButton(SrbacHelper::translate("srbac", "Save"),
 			array('saveAllowed'),
 			array(
 				'type' => 'POST',
@@ -63,7 +63,7 @@ foreach ($controllers as $n => $controller) {
 		?>
 	</div>
 </div>
-<?php echo SHtml::endForm(); ?>
+<?php echo SrbacHtml::endForm(); ?>
 <!--Adjust tabview height--->
 <script type="text/javascript">
     var tabsHeight = $(".tabs").height();

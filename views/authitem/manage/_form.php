@@ -31,13 +31,13 @@
     <div class="form-group col-md-12">
         <?php echo $form->labelEx($model, 'name', ['class' => 'control-label col-md-2']); ?>
         <?php echo $form->textField($model, 'name',
-            $model->name == Helper::findModule('srbac')->superUser ?
+            $model->name == SrbacHelper::findModule('srbac')->superUser ?
                 array('size' => 20, 'disabled' => "disabled", 'class' => 'form-control input-sm') : array('size' => 20, 'class' => 'form-control input-sm')); ?>
     </div>
     <div class="form-group col-md-12">
         <?php echo $form->labelEx($model, 'type', ['class' => 'control-label col-md-2']); ?>
         <?php echo $form->dropDownList($model, 'type', AuthItem::$TYPE_LABELS,
-            $model->name == Helper::findModule('srbac')->superUser || $update
+            $model->name == SrbacHelper::findModule('srbac')->superUser || $update
                 ? array('disabled' => "disabled", 'class' => 'form-control input-sm') : array('class' => 'form-control input-sm')); ?>
     </div>
     <div class="form-group col-md-12">
@@ -60,21 +60,21 @@
     <div class="form-group col-md-12">
         <?php echo $form->labelEx($model, 'bizrule', ['class' => 'control-label col-md-2']); ?>
         <?php echo $form->textArea($model, 'bizrule',
-            $model->name == Helper::findModule('srbac')->superUser ?
+            $model->name == SrbacHelper::findModule('srbac')->superUser ?
                 array('rows' => 3, 'cols' => 20, 'disabled' => 'disabled', 'class' => 'form-control input-sm') : array('rows' => 3, 'class' => 'form-control input-sm', 'cols' => 20)); ?>
     </div>
     <div class="form-group col-md-12">
         <?php echo $form->labelEx($model, 'data', ['class' => 'control-label col-md-2']); ?>
         <?php echo $form->textField($model, 'data',
-            $model->name == Helper::findModule('srbac')->superUser ?
+            $model->name == SrbacHelper::findModule('srbac')->superUser ?
                 array('disabled' => 'disabled', 'size' => 30, 'class' => 'form-control input-sm') : array('size' => 30, 'class' => 'form-control input-sm')); ?>
     </div>
     <?php echo CHtml::hiddenField('oldName', $model->name); ?>
     <div class="form-group col-md-12">
 		<label class="control-label col-md-2"> </label>
-        <?php echo SHtml::ajaxSubmitButton(
-            $update ? Helper::translate('srbac', 'Save') :
-                Helper::translate('srbac', 'Create'),
+        <?php echo SrbacHtml::ajaxSubmitButton(
+            $update ? SrbacHelper::translate('srbac', 'Save') :
+                SrbacHelper::translate('srbac', 'Create'),
             $update ? array('update', 'id' => urlencode($model->name)) : array('create'),
             array(
                 'type' => 'POST',

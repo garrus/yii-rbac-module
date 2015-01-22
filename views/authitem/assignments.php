@@ -30,9 +30,9 @@
         <?php
         $this->renderPartial("frontpage");
         ?>
-        <?php echo SHtml::beginForm(); ?>
-        <?php echo SHtml::activeDropDownList($this->module->getUserModel(), $this->module->userid,
-            SHtml::listData($this->module->getUserModel()->findAll(), $this->module->userid, $this->module->username),
+        <?php echo SrbacHtml::beginForm(); ?>
+        <?php echo SrbacHtml::activeDropDownList($this->module->getUserModel(), $this->module->userid,
+            SrbacHtml::listData($this->module->getUserModel()->findAll(), $this->module->userid, $this->module->username),
             array('size' => 1, 'class' => 'dropdown', 'ajax' => array(
                 'type' => 'POST',
                 'url' => array('showAssignments'),
@@ -40,9 +40,9 @@
                 'beforeSend' => 'function(){$("#assignments").addClass("srbacLoading");}',
                 'complete' => 'function(){$("#assignments").removeClass("srbacLoading");}'
             ),
-                'prompt' => Helper::translate('srbac', 'select user')
+                'prompt' => SrbacHelper::translate('srbac', 'select user')
             )); ?>
-        <?php echo SHtml::endForm(); ?>
+        <?php echo SrbacHtml::endForm(); ?>
     </div>
 <?php } else { ?>
     <?php $url = Yii::app()->urlManager->createUrl("srbac/authitem/showAssignments", array("id" => $id)); ?>

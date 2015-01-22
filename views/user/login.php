@@ -143,7 +143,7 @@
 		});
 
 		$form.on("submit", function(e){
-			var $btn = $(this);
+			var $btn = $form.find("input[type=submit]");
 			if ($btn.hasClass("disabled")) return false;
 
 			var $dp = $form.find("#dynamic_password");

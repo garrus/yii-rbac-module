@@ -14,16 +14,16 @@
  * @since 1.0.0
  */
 ?>
-<h3><?php echo Helper::translate('srbac', 'Install Srbac') ?></h3>
+<h3><?php echo SrbacHelper::translate('srbac', 'Install Srbac') ?></h3>
 <div class="srbac">
-    <?php echo SHtml::beginForm(); ?>
+    <?php echo SrbacHtml::beginForm(); ?>
     <div>
-        <?php echo Helper::translate('srbac', 'Srbac is already Installed.<br />Overwrite it?<br />'); ?>
+        <?php echo SrbacHelper::translate('srbac', 'Srbac is already Installed.<br />Overwrite it?<br />'); ?>
     </div>
     <div>
-        <?php echo SHtml::hiddenField("action", "Overwrite"); ?>
-        <?php echo SHtml::hiddenField("demo", $demo); ?>
-        <?php echo SHtml::submitButton(Helper::translate('srbac', 'Overwrite')); ?>
+        <?php echo SrbacHtml::hiddenField("action", "Overwrite"); ?>
+        <?php echo SrbacHtml::hiddenField("demo", $demo); ?>
+        <?php echo SrbacHtml::submitButton(SrbacHelper::translate('srbac', 'Overwrite')); ?>
     </div>
-    <?php echo SHtml::endForm(); ?>
+    <?php echo SrbacHtml::endForm(); ?>
 </div>

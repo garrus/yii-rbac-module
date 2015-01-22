@@ -20,18 +20,18 @@
         <table class="srbacDataGrid" style="width:50%">
             <tr>
                 <th>
-                    <?php echo Helper::translate("srbac", "The following items doesn't seem to belong to a controller"); ?>
+                    <?php echo SrbacHelper::translate("srbac", "The following items doesn't seem to belong to a controller"); ?>
                 </th>
             <tr>
             <tr>
                 <td>
                     <div class="srbacForm">
-                        <?php echo SHtml::beginForm() ?>
+                        <?php echo SrbacHtml::beginForm() ?>
                         <div>
-                            <?php echo SHtml::checkBoxList("items", "", $items, array("checkAll" => Helper::translate('srbac', 'Check All'))); ?>
+                            <?php echo SrbacHtml::checkBoxList("items", "", $items, array("checkAll" => SrbacHelper::translate('srbac', 'Check All'))); ?>
                         </div>
                         <div class="action">
-                            <?php echo SHtml::ajaxButton(Helper::translate('srbac', 'Delete'),
+                            <?php echo SrbacHtml::ajaxButton(SrbacHelper::translate('srbac', 'Delete'),
                                 array("deleteObsolete"),
                                 array(
                                     'type' => 'POST',
@@ -43,7 +43,7 @@
                                     'name' => 'buttonSave',
                                 ));?>
                         </div>
-                        <?php echo SHtml::endForm() ?>
+                        <?php echo SrbacHtml::endForm() ?>
                     </div>
                 </td>
             </tr>
@@ -56,7 +56,7 @@
 		<table class="srbacDataGrid" style="width:50%">
 			<tr>
 				<th>
-					<?php echo Helper::translate("srbac", "No authItems that don't belong to a controller were found"); ?>
+					<?php echo SrbacHelper::translate("srbac", "No authItems that don't belong to a controller were found"); ?>
 				</th>
 			</tr>
 		</table>

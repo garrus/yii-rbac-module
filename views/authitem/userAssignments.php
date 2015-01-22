@@ -15,12 +15,12 @@
  */
 ?>
 <br/>
-<h2><?php echo Helper::translate('srbac', 'Assignments of user');?> : <?php echo $username; ?></h2>
+<h2><?php echo SrbacHelper::translate('srbac', 'Assignments of user');?> : <?php echo $username; ?></h2>
 <table class="srbacDataGrid" width="100%">
     <tr>
-        <th class="roles"><?php echo Helper::translate('srbac', 'Roles') ?></th>
-        <th class="tasks"><?php echo Helper::translate('srbac', 'Tasks') ?></th>
-        <th class="operations"><?php echo Helper::translate('srbac', 'Operations') ?></th>
+        <th class="roles"><?php echo SrbacHelper::translate('srbac', 'Roles') ?></th>
+        <th class="tasks"><?php echo SrbacHelper::translate('srbac', 'Tasks') ?></th>
+        <th class="operations"><?php echo SrbacHelper::translate('srbac', 'Operations') ?></th>
     </tr>
     <tr>
         <td valign="top" colspan="3">

@@ -15,7 +15,7 @@
  */
 ?>
 <div>
-    <?php echo Helper::translate("srbac", "The following authItems are saved in the always allowed file"); ?>
+    <?php echo SrbacHelper::translate("srbac", "The following authItems are saved in the always allowed file"); ?>
     <?php echo ":" . $this->module->getAlwaysAllowedFile(); ?>
 </div>
 <br/>

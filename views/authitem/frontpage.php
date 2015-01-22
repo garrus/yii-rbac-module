@@ -17,60 +17,60 @@
 <div class="marginBottom">
     <div class="iconSet">
         <div class="iconBox">
-            <?php echo SHtml::link(
-                SHtml::image($this->module->getIconsPath() . '/manageAuth.png',
-                    Helper::translate('srbac', 'Managing auth items'),
+            <?php echo SrbacHtml::link(
+                SrbacHtml::image($this->module->getIconsPath() . '/manageAuth.png',
+                    SrbacHelper::translate('srbac', 'Managing auth items'),
                     array('class' => 'icon',
-                        'title' => Helper::translate('srbac', 'Managing auth items'),
+                        'title' => SrbacHelper::translate('srbac', 'Managing auth items'),
                         'border' => 0
                     )
                 ) . " " .
                 ($this->module->iconText ?
-                    Helper::translate('srbac', 'Managing auth items') :
+                    SrbacHelper::translate('srbac', 'Managing auth items') :
                     ""),
                 array('authitem/manage'))
             ?>
         </div>
         <div class="iconBox">
-            <?php echo SHtml::link(
-                SHtml::image($this->module->getIconsPath() . '/usersAssign.png',
-                    Helper::translate('srbac', 'Assign to users'),
+            <?php echo SrbacHtml::link(
+                SrbacHtml::image($this->module->getIconsPath() . '/usersAssign.png',
+                    SrbacHelper::translate('srbac', 'Assign to users'),
                     array('class' => 'icon',
-                        'title' => Helper::translate('srbac', 'Assign to users'),
+                        'title' => SrbacHelper::translate('srbac', 'Assign to users'),
                         'border' => 0,
                     )
                 ) . " " .
                 ($this->module->iconText ?
-                    Helper::translate('srbac', 'Assign to users') :
+                    SrbacHelper::translate('srbac', 'Assign to users') :
                     ""),
                 array('authitem/assign'));?>
         </div>
         <div class="iconBox">
-            <?php echo SHtml::link(
-                SHtml::image($this->module->getIconsPath() . '/users.png',
-                    Helper::translate('srbac', 'User\'s assignments'),
+            <?php echo SrbacHtml::link(
+                SrbacHtml::image($this->module->getIconsPath() . '/users.png',
+                    SrbacHelper::translate('srbac', 'User\'s assignments'),
                     array('class' => 'icon',
-                        'title' => Helper::translate('srbac', 'User\'s assignments'),
+                        'title' => SrbacHelper::translate('srbac', 'User\'s assignments'),
                         'border' => 0
                     )
                 ) . " " .
                 ($this->module->iconText ?
-                    Helper::translate('srbac', 'User\'s assignments') :
+                    SrbacHelper::translate('srbac', 'User\'s assignments') :
                     ""),
                 array('authitem/assignments'));?>
         </div>
 
 		<div class="iconBox">
-			<?php echo SHtml::link(
-				SHtml::image($this->module->getIconsPath() . '/user.png',
-					Helper::translate('srbac', 'User Management'),
+			<?php echo SrbacHtml::link(
+				SrbacHtml::image($this->module->getIconsPath() . '/user.png',
+					SrbacHelper::translate('srbac', 'User Management'),
 					array('class' => 'icon',
-						'title' => Helper::translate('srbac', 'User Management'),
+						'title' => SrbacHelper::translate('srbac', 'User Management'),
 						'border' => 0
 					)
 				) . " " .
 				($this->module->iconText ?
-					Helper::translate('srbac', 'User Management') :
+					SrbacHelper::translate('srbac', 'User Management') :
 					""),
 				array('user/index'));?>
 		</div>

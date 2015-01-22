@@ -23,20 +23,20 @@ $('#adminTask').toggle('fast');
 Yii::app()->clientScript->registerScript("cb", $script, CClientScript::POS_READY);
 ?>
 <div class="srbacForm">
-    <?php echo SHtml::form() ?>
+    <?php echo SrbacHtml::form() ?>
     <div class="action">
         <?php echo "<b>" . $controller . "</b>" ?>
     </div>
     <?php if (count($actions) > 0) { ?>
         <div>
-            <?php echo SHtml::checkBoxList("actions", "", $actions,
-                array("checkAll" => "<b>" . Helper::translate('srbac', 'Check All') . "</b>")); ?>
+            <?php echo SrbacHtml::checkBoxList("actions", "", $actions,
+                array("checkAll" => "<b>" . SrbacHelper::translate('srbac', 'Check All') . "</b>")); ?>
         </div>
     <?php } ?>
     <?php if (!$delete) { ?>
         <div class="simple">
             <hr style="color:red">
-            <?php echo Helper::translate('srbac', "Pages that access is always allowed") . ":" ?>
+            <?php echo SrbacHelper::translate('srbac', "Pages that access is always allowed") . ":" ?>
             <?php foreach ($allowed as $al) { ?>
                 <div class="simple">
                     <?php echo $al; ?>
@@ -51,25 +51,25 @@ Yii::app()->clientScript->registerScript("cb", $script, CClientScript::POS_READY
         <?php $button_title = $delete ? "Delete" : "Create"; ?>
         <?php $button_action = $delete ? "autoDeleteItems" : "autoCreateItems"; ?>
         <?php if (!$taskViewingExists || !$taskAdministratingExists || $delete) { ?>
-            <?php echo Helper::translate('srbac', $cb_title) ?>
-            <?php echo SHtml::checkBox("createTasks", true, array("id" => "cb_createTasks")); ?>
+            <?php echo SrbacHelper::translate('srbac', $cb_title) ?>
+            <?php echo SrbacHtml::checkBox("createTasks", true, array("id" => "cb_createTasks")); ?>
         <?php } ?>
     </div>
     <?php if (($taskViewingExists && $delete) || (!$taskViewingExists && !$delete)) { ?>
         <div class="simple">
-            <?php echo SHtml::textField("tasks[user]", $task . "Viewing", array("id" => "userTask", "readonly" => true)); ?>
+            <?php echo SrbacHtml::textField("tasks[user]", $task . "Viewing", array("id" => "userTask", "readonly" => true)); ?>
         </div>
     <?php } ?>
     <?php if (($taskAdministratingExists && $delete) || (!$taskAdministratingExists && !$delete)) { ?>
         <div class="simple">
-            <?php echo SHtml::textField("tasks[admin]", $task . "Administrating", array("id" => "adminTask", "readonly" => true)); ?>
+            <?php echo SrbacHtml::textField("tasks[admin]", $task . "Administrating", array("id" => "adminTask", "readonly" => true)); ?>
         </div>
     <?php } ?>
     <div class="simple">
-        <?php echo SHtml::hiddenField("controller", $controller) ?>
+        <?php echo SrbacHtml::hiddenField("controller", $controller) ?>
     </div>
     <div class="action">
-        <?php echo SHtml::ajaxButton(Helper::translate('srbac', $button_title),
+        <?php echo SrbacHtml::ajaxButton(SrbacHelper::translate('srbac', $button_title),
             array($button_action),
             array(
                 'type' => 'POST',
@@ -78,5 +78,5 @@ Yii::app()->clientScript->registerScript("cb", $script, CClientScript::POS_READY
                 'complete' => 'function(){$("#controllerActions").removeClass("srbacLoading");}',
             )); ?>
     </div>
-    <?php echo SHtml::endForm() ?>
+    <?php echo SrbacHtml::endForm() ?>
 </div>

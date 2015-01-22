@@ -21,15 +21,15 @@ $criteria->order = "name";
 ?>
     <!-- TASKS -> OPERATIONS -->
     <div class="srbac">
-        <?php echo SHtml::beginForm(); ?>
-        <?php echo SHtml::errorSummary($model); ?>
+        <?php echo SrbacHtml::beginForm(); ?>
+        <?php echo SrbacHtml::errorSummary($model); ?>
         <table width="100%">
             <tr>
-                <th colspan="2"><?php echo Helper::translate('srbac', 'Assign Operations to Tasks') ?></th>
+                <th colspan="2"><?php echo SrbacHelper::translate('srbac', 'Assign Operations to Tasks') ?></th>
             </tr>
             <tr>
                 <th width="50%">
-                    <?php echo SHtml::label(Helper::translate('srbac', "Task"), 'task'); ?></th>
+                    <?php echo SrbacHtml::label(SrbacHelper::translate('srbac', "Task"), 'task'); ?></th>
                 <td width="50%" rowspan="2">
                     <div id="operations">
                         <?php
@@ -40,8 +40,8 @@ $criteria->order = "name";
                 </td>
             </tr>
             <tr valign="top">
-                <td><?php echo SHtml::activeDropDownList(Assignments::model(), 'itemname',
-                        SHtml::listData(AuthItem::model()->findAll($criteria), 'name', 'name'),
+                <td><?php echo SrbacHtml::activeDropDownList(Assignments::model(), 'itemname',
+                        SrbacHtml::listData(AuthItem::model()->findAll($criteria), 'name', 'name'),
                         array('size' => $this->module->listBoxNumberOfLines, 'class' => 'dropdown', 'ajax' => array(
                             'type' => 'POST',
                             'url' => array('getOpers'),
@@ -51,8 +51,8 @@ $criteria->order = "name";
                         ),
                         )); ?>
                     <div>
-                        <?php echo Helper::translate("srbac", "Clever Assigning"); ?>:
-                        <?php echo SHtml::checkBox("clever", Yii::app()->getGlobalState("cleverAssigning")); ?>
+                        <?php echo SrbacHelper::translate("srbac", "Clever Assigning"); ?>:
+                        <?php echo SrbacHtml::checkBox("clever", Yii::app()->getGlobalState("cleverAssigning")); ?>
                     </div>
                 </td>
             </tr>
@@ -62,7 +62,7 @@ $criteria->order = "name";
         <div class="message" id="loadMessTask">
             <?php echo $message ?>
         </div>
-        <?php echo SHtml::endForm(); ?>
+        <?php echo SrbacHtml::endForm(); ?>
     </div>
 <?php
 $urlManager = Yii::app()->getUrlManager();

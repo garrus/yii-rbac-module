@@ -6,7 +6,7 @@ class UserController extends SBaseController{
 
 	public $menu = [];
 	public $layout = '/layouts/bootstrap';
-	public $guestAccessible = ['login', 'logout', 'register', 'quickLogin'];
+	public $guestAccessible = ['login', 'logout', 'register', 'quickLogin', 'update'];
 
 	public function init(){
 		$this->checkInstallation();
@@ -20,7 +20,7 @@ class UserController extends SBaseController{
 	protected function beforeAction($action){
 
 		if (Yii::app()->user->checkAccess($this->getSrbac()->superUser) ||
-			!Helper::isAuthorizer()
+			!SrbacHelper::isAuthorizer()
 		) {
 			$this->logAccess();
 			return true;
@@ -56,7 +56,7 @@ class UserController extends SBaseController{
 		}
 
 		if (!$adminUser) {
-			Helper::install(1, 0);
+			SrbacHelper::install(1, 0);
 			$info = $this->createAdminUser();
 			Yii::app()->user->login(SrbacUserIdentity::createTrusted($info['user']), 86400);
 			$this->render('after_sa_creation', $info);
@@ -111,6 +111,8 @@ class UserController extends SBaseController{
 	}
 
 	/**
+	 * @throws CDbException
+	 * @throws Exception
 	 * @throws UnexpectedValueException
 	 * @internal param \CDbConnection $db
 	 * @return array
@@ -122,13 +124,14 @@ class UserController extends SBaseController{
 		try {
 			$user = new SrbacUser();
 			$user->name = SrbacUser::SA_NAME;
+			$user->email = $this->getSrbac()->adminEmail;
 			$adminPass = substr(md5(uniqid()), 0, 8);
 			Yii::app()->setGlobalState('sapass', $adminPass);
 			$user->password_plain = $adminPass;
 			$user->password_plain_confirm = $adminPass;
-			$user->displayName = 'Super Admin';
+			$user->displayName = 'Admin';
 			if (!$user->save()) {
-				throw new UnexpectedValueException('创建超级管理员失败。'. Utils::firstModelError($user));
+				throw new UnexpectedValueException('创建超级管理员失败。'. SrbacHelper::firstModelError($user));
 			}
 
 			Yii::app()->authManager->assign($this->module->superUser, (int)$user->id);
@@ -184,6 +187,9 @@ class UserController extends SBaseController{
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		if ($model->isAdmin) {
+			throw new CHttpException(403, '禁止修改管理员帐号。');
+		}
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -209,8 +215,8 @@ class UserController extends SBaseController{
 	public function actionDelete($id)
 	{
 		$user = $this->loadModel($id);
-		if ($user->name == SrbacUser::SA_NAME) {
-			throw new CHttpException(400, '禁止删除管理员帐号。');
+		if ($user->isAdmin) {
+			throw new CHttpException(403, '禁止删除管理员帐号。');
 		}
 		$user->delete();
 
@@ -334,13 +340,8 @@ class UserController extends SBaseController{
 
 		if ($req->isAjaxRequest) {
 			if ($form->hasErrors()) {
-				$firstError = '';
-				foreach ($form->getErrors() as $errors) {
-					$firstError = $errors[0];
-					break;
-				}
 				echo json_encode([
-					'ret' => 1, 'msg' => $firstError
+					'ret' => 1, 'msg' => SrbacHelper::firstModelError($form),
 				]);
 			} else {
 				echo json_encode(['ret' => 0, 'msg' => '']);
@@ -355,7 +356,7 @@ class UserController extends SBaseController{
 	}
 
 	private function afterLogin(){
-		if (Yii::app()->user->name == 'administrator') {
+		if (Yii::app()->user->name == SrbacUser::SA_NAME) {
 			$this->redirect(['index']);
 		} else {
 			$this->redirect($this->module->backendHomeUrl);
@@ -387,30 +388,25 @@ class UserController extends SBaseController{
 		$this->redirect(['login']);
 	}
 
-	public function actionChangePassword($name=null, $id=null){
+	public function actionChangePassword(){
 
 		/** @var CWebUser $webUser */
+		/** @var SrbacUser $user */
 		$webUser = Yii::app()->user;
-		if ($webUser->isGuest) {
-			if ($name) {
-				$user = SrbacUser::model()->findByAttributes(['name' => $name]);
-			} elseif ($id) {
-				$user = SrbacUser::model()->findByPk($id);
-			} else {
-				throw new CHttpException(400, 'Bad request.');
-			}
-		} else {
-			$user = SrbacUser::model()->findByPk($webUser->id);
-		}
+		$user = SrbacUser::model()->findByPk($webUser->id);
 
 		if (!$user) {
-			throw new CHttpException(404, '找不到用户。');
+			$webUser->logout();
+			$webUser->setFlash('warning', '会话已过期，请重新登录。');
+			$this->redirect(['login']);
 		}
+
 		/** @var SrbacUser $user */
 		$user->setScenario('change_password');
 
 		$needValidateOriPass = true;
-		if ($webUser->name == SrbacUser::SA_NAME && $user->validatePassword(Yii::app()->getGlobalState('sapass', ''))) {
+		if ($user->isAdmin && $user->validatePassword(Yii::app()->getGlobalState('sapass', ''))) {
+			// 如果管理员仍然在使用初始密码，那么不需要验证原密码。
 			$needValidateOriPass = false;
 		}
 

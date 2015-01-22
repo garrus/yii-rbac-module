@@ -16,6 +16,7 @@
  * @property string $update_time
  *
  * @property boolean $isPasswordModified
+ * @property boolean $isAdmin
  *
  * @property Assignments[] $assignments
  * @property SrbacDynamicPass[] $dynamicPasses
@@ -82,7 +83,11 @@ class SrbacUser extends CActiveRecord
 
 		$pass = $this->password_plain;
 		if (empty($pass)) {
-			$this->addError('password_plain', '密码不能为空');
+			if ($this->scenario == 'update') {
+				return;
+			} else {
+				$this->addError('password_plain', '密码不能为空');
+			}
 			return;
 		}
 		if (strlen($pass) < 8) {
@@ -113,10 +118,12 @@ class SrbacUser extends CActiveRecord
 			if (!$this->salt) {
 				$this->salt = substr(md5(uniqid()), 2, 16);
 			}
-			$newPass = self::encryptPassword($this->password_plain, $this->salt);
-			if ($newPass !== $this->password) {
-				$this->password = $newPass;
-				$this->_isPasswordModified = true;
+			if ($this->password_plain) {
+				$newPass = self::encryptPassword($this->password_plain, $this->salt);
+				if ($newPass !== $this->password) {
+					$this->password = $newPass;
+					$this->_isPasswordModified = true;
+				}
 			}
 		}
 	}
@@ -205,6 +212,10 @@ class SrbacUser extends CActiveRecord
 				$this->setAttribute($field, null);
 			}
 		}
+		if ($this->isAdmin) {
+			$this->email = null;
+		}
+
 		return parent::beforeSave();
 	}
 
@@ -223,6 +234,15 @@ class SrbacUser extends CActiveRecord
 		if ($this->update_time instanceof CDbExpression ||
 			$this->create_time instanceof CDbExpression) {
 			$this->refresh();
+		}
+		if ($this->isAdmin) {
+			$this->email = Yii::app()->getModule('srbac')->adminEmail;
+		}
+	}
+
+	protected function afterFind(){
+		if ($this->isAdmin) {
+			$this->email = Yii::app()->getModule('srbac')->adminEmail;
 		}
 	}
 
@@ -258,4 +278,12 @@ class SrbacUser extends CActiveRecord
 	public static function encryptPassword($pass, $salt){
 		return md5(md5($pass. $salt));
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function getIsAdmin(){
+		return $this->name == self::SA_NAME;
+	}
+
 }

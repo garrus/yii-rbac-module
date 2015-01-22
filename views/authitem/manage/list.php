@@ -22,11 +22,11 @@
 		CClientScript::POS_READY
 	);
 endif; ?>
-<?php echo SHtml::beginForm(); ?>
+<?php echo SrbacHtml::beginForm(); ?>
 <div class="well well-sm">
         <?php
-        echo SHtml::ajaxLink(
-			'<strong>+</strong>'. Helper::translate('srbac', 'Create'),
+        echo SrbacHtml::ajaxLink(
+			'<strong>+</strong>'. SrbacHelper::translate('srbac', 'Create'),
 //            SHtml::image($this->module->getIconsPath() . '/create.png',
 //                Helper::translate('srbac', 'Create'),
 //                array('border' => 0,
@@ -45,7 +45,7 @@ endif; ?>
     <div class="form-inline pull-right">
         <div class="form-group-sm">
 		<?php
-		echo CHtml::label(Helper::translate('srbac', 'Search'). ' ', 'search-auth-item', ['style' => 'margin: 0 0.5em 0 1em;']);
+		echo CHtml::label(SrbacHelper::translate('srbac', 'Search'). ' ', 'search-auth-item', ['style' => 'margin: 0 0.5em 0 1em;']);
         $this->widget('CAutoComplete',
             array(
                 'name' => 'name',
@@ -59,10 +59,10 @@ endif; ?>
             )
         );
 
-        echo SHtml::imageButton($this->module->getIconsPath() . '/preview.png',
+        echo SrbacHtml::imageButton($this->module->getIconsPath() . '/preview.png',
             array(
                 'border' => 0,
-                'title' => Helper::translate('srbac', 'Search'),
+                'title' => SrbacHelper::translate('srbac', 'Search'),
                 'live' => false,
                 'ajax' => array(
                     'type' => 'POST', 'url' => array('list'), 'update' => '#list',
@@ -84,10 +84,10 @@ ob_start();
 <tr>
 <th style="width: 80px;">
 	<?php
-	echo SHtml::dropDownList('selectedType', Yii::app()->user->getState("selectedType"),
+	echo SrbacHtml::dropDownList('selectedType', Yii::app()->user->getState("selectedType"),
 		AuthItem::$TYPE_LABELS,
 		array(
-			'prompt' => Helper::translate('srbac', 'All'),
+			'prompt' => SrbacHelper::translate('srbac', 'All'),
 			'live' => false,
 			'ajax' => array(
 				'type' => 'POST',
@@ -101,8 +101,8 @@ ob_start();
 	);
 	?>
 </th>
-<th><?php echo Helper::translate('srbac', 'Name'); ?></th>
-<th><?php echo Helper::translate('srbac', 'Description'); ?></th>
+<th><?php echo SrbacHelper::translate('srbac', 'Name'); ?></th>
+<th><?php echo SrbacHelper::translate('srbac', 'Description'); ?></th>
 <th style="width: 100px;"></th>
 </tr>
 <?php $header = ob_get_clean();
@@ -133,5 +133,5 @@ $this->widget('zii.widgets.CListView', [
 		'lastPageLabel' => '&raquo;',
 	]
 ]);
-echo SHtml::endForm(); ?>
+echo SrbacHtml::endForm(); ?>
 <br/>

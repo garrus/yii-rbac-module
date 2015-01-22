@@ -14,7 +14,7 @@
  * @since 1.0.0
  */
 ?>
-<h3><?php echo Helper::translate('srbac', 'Install Srbac') ?></h3>
+<h3><?php echo SrbacHelper::translate('srbac', 'Install Srbac') ?></h3>
 <div class="message">
     <?php echo $error; ?>
 </div>

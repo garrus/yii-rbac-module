@@ -131,17 +131,21 @@ class SrbacDynamicPass extends CActiveRecord
 				$appName = Yii::app()->name;
 				$mail->subject($appName. '-管理后台动态密码验证');
 
-				$loginUrl = Yii::app()->createAbsoluteUrl('/srbac/user/quickLogin', [
+				$quickLoginUrl = Yii::app()->createAbsoluteUrl('/srbac/user/quickLogin', [
 					'email' => $user->email, 'code' => $code,
 				]);
 				$body = <<<BODY
 $user->displayName:<br><br>
-您此次登录 {$appName}-管理后台 的动态密码是<br>
+您此次登录 <strong>{$appName}-管理后台<strong> 的动态密码是<br>
 <h3>$code</h3>
-此动态密码在30分钟内一直有效，将其填入动态密码验证框内以完成验证。<br><br>
+此密码在30分钟内一直有效，将其填入登录界面的动态密码框内以完成验证。<br><br>
 您也可以使用下面的一次性链接进行快速登录（需要在同一个浏览器中打开）<br>
-$loginUrl
+$quickLoginUrl
+
 BODY;
+				if (!$user->isAdmin) {
+					$body .= '<hr><p style="font-size:90%; color: gray;">如有疑问，请联系管理员 '. SrbacUser::getAdminEmail(). '</p>';
+				}
 
 				$mail->body($body);
 				if (!$mail->send()) {

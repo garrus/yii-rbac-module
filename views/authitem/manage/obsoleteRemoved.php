@@ -20,7 +20,7 @@
     <table class="srbacDataGrid" style="width:50%">
         <tr>
             <th>
-                <?php echo "<b>" . Helper::translate("srbac", "authItems removed") . "</b>" ?> :
+                <?php echo "<b>" . SrbacHelper::translate("srbac", "authItems removed") . "</b>" ?> :
             </th>
         </tr>
         <tr>
@@ -38,7 +38,7 @@
     <table class="srbacDataGrid" style="width:50%">
         <tr>
             <th style="background-color: red;color: white">
-                <?php echo "</b>" . Helper::translate("srbac", "authItems not removed") . "</b>" ?> :
+                <?php echo "</b>" . SrbacHelper::translate("srbac", "authItems not removed") . "</b>" ?> :
             </th>
         </tr>
         <tr>

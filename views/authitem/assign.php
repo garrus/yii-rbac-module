@@ -30,15 +30,15 @@
 
     $tabs = array(
         'tab1' => array(
-            'title' => Helper::translate('srbac', 'Users'),
+            'title' => SrbacHelper::translate('srbac', 'Users'),
             'view' => 'tabViews/roleToUser',
         ),
         'tab2' => array(
-            'title' => Helper::translate('srbac', 'Roles'),
+            'title' => SrbacHelper::translate('srbac', 'Roles'),
             'view' => 'tabViews/taskToRole',
         ),
         'tab3' => array(
-            'title' => Helper::translate('srbac', 'Tasks'),
+            'title' => SrbacHelper::translate('srbac', 'Tasks'),
             'view' => 'tabViews/operationToTask',
         ),
     );

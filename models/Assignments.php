@@ -68,10 +68,10 @@ class Assignments extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'itemname' => Helper::translate('srbac', 'Itemname'),
-            'userid' => Helper::translate('srbac', 'User id'),
-            'bizrule' => Helper::translate('srbac', 'Bizrule'),
-            'data' => Helper::translate('srbac', 'Data'),
+            'itemname' => SrbacHelper::translate('srbac', 'Itemname'),
+            'userid' => SrbacHelper::translate('srbac', 'User id'),
+            'bizrule' => SrbacHelper::translate('srbac', 'Bizrule'),
+            'data' => SrbacHelper::translate('srbac', 'Data'),
         );
     }
 }
