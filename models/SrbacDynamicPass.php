@@ -144,7 +144,7 @@ $quickLoginUrl
 
 BODY;
 				if (!$user->isAdmin) {
-					$body .= '<hr><p style="font-size:90%; color: gray;">如有疑问，请联系管理员 '. SrbacUser::getAdminEmail(). '</p>';
+					$body .= '<hr><p style="font-size:90%; color: gray;">如有疑问，请联系管理员 '. Yii::app()->getModule('srbac')->adminEmail. '</p>';
 				}
 
 				$mail->body($body);

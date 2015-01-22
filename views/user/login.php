@@ -73,8 +73,8 @@
 		<?php echo CHtml::label('动态密码', 'dynamic_password', ['class' => 'control-label']);?>
 		<?php echo CHtml::textField('dynamic_password', $dynamicPassword, ['class' => 'form-control', 'autocomplete' => 'off']);?>
 		<?php echo $form->error($model, 'dynamic_password', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']);?>
-		<p class="field-desc text-info">
-			没有收到或者已过期？<?php echo CHtml::link('点此重新发送', '#', ['class' => '', 'id' => 'resent-dynamic-password']);?>
+		<p class="field-desc" style="margin-top: 7px;">
+			<?php echo CHtml::link('获取动态密码', '#', ['class' => 'btn btn-default btn-sm', 'id' => 'resent-dynamic-password']);?>
 		</p>
 	</div>
 
@@ -106,6 +106,7 @@
 			}
 
 			$link.addClass("disabled");
+			$link.text("发送中……");
 			clearInterval(sendDpInterval);
 
 			$form.find("#dynamic_password").val("");
@@ -124,15 +125,15 @@
 
 			function startCounting(){
 				$link.data("ori-text", $link.text());
-				$link.text("请耐心等候30秒");
+				$link.text("30 秒后可重新发送");
 
 				var sec = 30;
 				sendDpInterval = setInterval(function(){
 					if (--sec) {
-						$link.text("请耐心等候" + sec + "秒");
+						$link.text(sec + " 秒后可重新发送");
 					} else {
 						clearInterval(sendDpInterval);
-						$link.text($link.data("ori-text"));
+						$link.text("重新发送");
 						$link.removeClass("disabled");
 						xhr.abort();
 					}
