@@ -5,7 +5,7 @@
 
 <div class="row" style="
 	margin: 100px auto;
-	width: 400px;
+	width: 500px;
 	border-radius: 10px;
 	border: 2px solid #333;
 	box-shadow: 0 0 8px 2px gray;

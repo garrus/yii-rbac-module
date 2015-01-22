@@ -16,6 +16,7 @@
 	<h2 class="text-center text-info">管理员帐号已创建</h2>
 	<hr>
 	<p>登录名：<?php echo $user->name;?></p>
-	<p>密码： <?php echo $password;?></p>
-	<?php echo CHtml::link('修改密码', ['changePassword']);?>
+	<p>邮箱：<?php echo $user->email;?></p>
+	<p>初始密码： <?php echo $password;?></p>
+	<h4 class="text-danger">请立即 <?php echo CHtml::link('修改密码', ['changePassword']);?>！</h4>
 </div>
