@@ -71,7 +71,7 @@
 
 	<div class="form-group">
 		<?php echo CHtml::label('动态密码', 'dynamic_password', ['class' => 'control-label']);?>
-		<?php echo CHtml::textField('dynamic_password', '', ['class' => 'form-control', 'autocomplete' => 'off']);?>
+		<?php echo CHtml::textField('dynamic_password', $dynamicPassword, ['class' => 'form-control', 'autocomplete' => 'off']);?>
 		<?php echo $form->error($model, 'dynamic_password', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']);?>
 		<p class="field-desc text-info">
 			没有收到或者已过期？<?php echo CHtml::link('点此重新发送', '#', ['class' => '', 'id' => 'resent-dynamic-password']);?>

@@ -288,7 +288,7 @@ class UserController extends SBaseController{
 	/**
 	 *
 	 */
-	public function actionLogin(){
+	public function actionLogin($email='', $dynamicPassword=''){
 
 		/**
 		 * @var CHttpRequest $req
@@ -296,9 +296,12 @@ class UserController extends SBaseController{
 		 */
 		$req = Yii::app()->request;
 		$session = Yii::app()->session;
-		$dynamicPassword = $req->getPost('dynamic_password');
-
 		$form = new SrbacLoginForm();
+		unset($_GET['email'], $_GET['dynamicPassword']);
+		if ($email && $email != $this->getSrbac()->adminEmail) {
+			$form->email = $email;
+		}
+		$dynamicPassword = $req->getPost('dynamic_password', $dynamicPassword);
 
 		if (isset($_POST['SrbacLoginForm'])) {
 			$form->attributes = $_POST['SrbacLoginForm'];
@@ -364,7 +367,7 @@ class UserController extends SBaseController{
 		Yii::app()->end(); // actually this line is not necessary
 	}
 
-	public function actionQuickLogin($email=null, $code=null){
+	public function actionQuickLogin($id, $email, $code){
 
 		/**
 		 * @var CHttpRequest $req
@@ -372,11 +375,14 @@ class UserController extends SBaseController{
 		 */
 		$session = Yii::app()->session;
 
-		if (!empty($session['password_validated']) && $email && $code) {
+		if (!empty($session['password_validated'])
+			&& $session['password_validated'] == $id
+			&& $email && $code
+		) {
 			/** @var SrbacUser $user */
-			$user = SrbacUser::model()->findByAttributes(['email' => $email]);
+			$user = SrbacUser::model()->findByPk($id);
 			if ($user !== null &&
-				$user->id == $session['password_validated'] &&
+				$user->email == $email &&
 				$user->validateDynamicPassword($code, SrbacDynamicPass::TYPE_EMAIL)
 			) {
 				Yii::app()->user->login(SrbacUserIdentity::createTrusted($user), 86400);
@@ -384,8 +390,8 @@ class UserController extends SBaseController{
 			}
 		}
 
-		Yii::app()->user->setFlash('warning', '此链接已过期。我们需要重新验证您的用户名和密码。');
-		$this->redirect(['login']);
+		Yii::app()->user->setFlash('warning', '此链接已过期。我们需要重新验证您的密码。');
+		$this->redirect(['login', 'email' => $email, 'dynamicPassword' => $code]);
 	}
 
 	public function actionChangePassword(){

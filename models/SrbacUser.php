@@ -249,7 +249,7 @@ class SrbacUser extends CActiveRecord
 	/**
 	 * @param string $pass
 	 * @param string $type
-	 * @return bool
+	 * @return boolean
 	 */
 	public function validateDynamicPassword($pass, $type=SrbacDynamicPass::TYPE_EMAIL){
 		$relations = $this->dynamicPasses;
