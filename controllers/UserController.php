@@ -354,6 +354,7 @@ class UserController extends SBaseController{
 			$this->render('login', [
 				'model' => $form,
 				'dynamicPassword' => $dynamicPassword,
+				'showRegisterLink' => $this->getSrbac()->allowRegister,
 			]);
 		}
 	}
@@ -448,6 +449,10 @@ class UserController extends SBaseController{
 	}
 
 	public function actionRegister(){
+
+		if (!$this->getSrbac()->allowRegister) {
+			throw new CHttpException(403, '注册功能已被禁用.');
+		}
 
 		$model=new SrbacUser;
 

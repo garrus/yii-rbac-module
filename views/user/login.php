@@ -4,6 +4,7 @@
  * @var SrbacLoginForm $model
  * @var CActiveForm $form
  * @var string $dynamicPassword
+ * @var boolean $showRegisterLink
  */
 ?>
 <script type="text/javascript">
@@ -81,7 +82,7 @@
 	<div class="form-group">
 
 		<?php echo CHtml::submitButton('登录', ['class' => 'btn btn-primary']);?>
-		or <?php echo CHtml::link('注册', ['register']);?>
+		<?php if (!empty($showRegisterLink)): ?>or <?php echo CHtml::link('注册', ['register']); endif;?>
 	</div>
 
 	<?php $this->endWidget($form);?>

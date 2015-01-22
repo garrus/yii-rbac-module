@@ -82,11 +82,13 @@ class SrbacModule extends CWebModule {
     /* @var $delimeter string The delimeter used in modules between moduleId and itemId */
     public $delimeter = "/";
 
-	public $backendHomeUrl = '/M/index';
+	public $backendHomeUrl = '/';
 
 	public $mailer = [];
 
 	public $adminEmail = '';
+
+	public $allowRegister = false;
 
     /**
      * this method is called when the module is being created you may place code
@@ -126,18 +128,20 @@ class SrbacModule extends CWebModule {
 			if (is_string($this->mailer)) {
 				return Yii::app()->getComponent($this->mailer);
 			} elseif (is_array($this->mailer)) {
-				$this->setComponent('mailer', [
-					'class' => 'srbac.extensions.MultiMailer.MultiMailer',
-					'setFromAddress' => 'register@oppo.com',
-					'setFromName' => 'OPPO',
-					'setMethod' => 'SMTP',
-					'setOptions' => $this->mailer,
-				]);
-				return $this->getComponent('mailer');
+				$config = $this->mailer;
+				if (!isset($config['class'])) {
+					$config['class'] = 'application.modules.srbac.extensions.MultiMailer.MultiMailer';
+				}
+				$mailer = Yii::createComponent($this->mailer);
+				if ($mailer instanceof CApplicationComponent) {
+					$mailer->init();
+				}
+				$this->setComponent('mailer', $mailer);
+				return $mailer;
 			}
 		}
 
-		throw new Exception('SrbacModule.mailer is not config. No mailer component is available.');
+		throw new Exception('模块 '. $this->id. ' 的 mailer 选项未被正确的配置。找不到可用的邮件组件。');
 	}
 
 	public function getAssetsUrl(){
