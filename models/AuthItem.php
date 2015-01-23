@@ -60,6 +60,7 @@ class AuthItem extends CActiveRecord {
         return array(
             array('name', 'length', 'max' => 64),
             array('name, type', 'required'),
+			array('name', 'unique', 'message' => '已经有名字相同的项目存在了'),
             array('type', 'numerical', 'integerOnly' => true),
             array('name,type,description,bizrule,data', 'safe'),
         );

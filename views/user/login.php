@@ -107,6 +107,7 @@
 			}
 
 			$link.addClass("disabled");
+			$link.data("ori-text", $link.text());
 			$link.text("发送中……");
 			clearInterval(sendDpInterval);
 
@@ -115,6 +116,7 @@
 				if (json.ret == 1) {
 					noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
 					$link.removeClass("disabled");
+					$link.text($link.data("ori-text"));
 				} else {
 					noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
 					startCounting();

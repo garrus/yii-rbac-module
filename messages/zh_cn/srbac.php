@@ -67,7 +67,7 @@ return array(
     "Search" => "搜索",
     "All" => "全部",
     "Yes" => "是",
-    "Updating list" => "更新列表",
+    "Updating list" => "列表已更新",
     "created successfully" => "添加成功",
     "updated successfully" => "更新成功",
     "Error while creating" => "添加时发生错误",

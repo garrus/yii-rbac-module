@@ -92,9 +92,9 @@ class AuthitemController extends SBaseController {
                     }
                 }
                 $auth->revoke($role, $userid);
-                return true;
             }
         }
+		return true;
     }
 
     /**

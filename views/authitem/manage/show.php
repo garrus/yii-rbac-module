@@ -24,7 +24,7 @@
           )); ?>
     </script>
 <?php else : ?>
-    <h2><?php echo $model->name; ?></h2>
+    <h2><?php echo CHtml::encode($model->name); ?></h2>
 
 	<?php
 	$this->widget('zii.widgets.CDetailView', [
@@ -43,7 +43,7 @@
 
     <div class="simple">
         <?php if ($delete) : ?>
-            <?php echo SrbacHelper::translate('srbac', 'Really delete') ?> <?php echo $model->name; ?> ?
+            <?php echo SrbacHelper::translate('srbac', 'Really delete') ?> <?php echo CHtml::encode($model->name); ?> ?
             <?php echo SrbacHtml::ajaxButton(SrbacHelper::translate('srbac', 'Yes'),
                 array('delete', 'id' => $model->name),
                 array(

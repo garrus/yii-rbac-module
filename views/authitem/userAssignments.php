@@ -15,7 +15,7 @@
  */
 ?>
 <br/>
-<h2><?php echo SrbacHelper::translate('srbac', 'Assignments of user');?> : <?php echo $username; ?></h2>
+<h2><?php echo SrbacHelper::translate('srbac', 'Assignments of user');?> : <?php echo CHtml::encode($username); ?></h2>
 <table class="srbacDataGrid" width="100%">
     <tr>
         <th class="roles"><?php echo SrbacHelper::translate('srbac', 'Roles') ?></th>

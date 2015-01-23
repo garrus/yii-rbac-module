@@ -128,7 +128,7 @@
 <div id="wizard" class="row">
 	<?php endif; ?>
 	<div class="col-md-7">
-		<h3 class="text-center" style="margin-top: 0;"><?php echo SrbacHelper::translate("srbac", "Auth items"); ?></h3>
+		<h3 class="text-center"><?php echo SrbacHelper::translate("srbac", "Auth items"); ?></h3>
 		<div id="list">
 			<?php echo $this->renderPartial('manage/list', array(
 				'dataProvider' => $dataProvider,
@@ -137,7 +137,7 @@
 	</div>
 
 	<div class="col-md-5">
-		<h3 class="text-center" style="margin-top: 0; color: transparent;">动作</h3>
+		<h3 class="text-center" style="display: none;margin-top: 0; color: transparent;">动作</h3>
 		<div id="preview"></div>
 	</div>
 <?php if (!$full) :?>
