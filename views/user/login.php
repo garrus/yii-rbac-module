@@ -39,7 +39,12 @@
 
 	<div class="form-group">
 	<?php $loginType = 'name';
-		$types = ['name', 'stuff_no', 'email', 'mobile'];
+		$types = [
+			'name',
+			'stuff_no',
+			'email',
+			'mobile'
+		];
 		foreach ($types as $type) {
 			if (!empty($model->{$type})) {
 				$loginType = $type;
@@ -60,6 +65,11 @@
 	<div class="form-group login-name-row <?php if ($type != $loginType) echo 'hide';?>" role="login-by-<?php echo $type;?>">
 		<?php echo $form->labelEx($model, $type, ['class' => 'control-label']);?>
 		<?php echo $form->textField($model, $type, ['class' => 'form-control', 'disabled' => $type == $loginType ? '' : 'disabled']);?>
+		<?php if ($type == 'mobile'): ?>
+			<p class="field-desc text-info">只有当你的个人资料中填写了手机号才可使用手机号登录</p>
+		<?php elseif ($type == 'stuff_no'): ?>
+			<p class="field-desc text-info">只有当你的个人资料中填写了工号才可使用工号登录</p>
+		<?php endif;?>
 		<?php echo $form->error($model, $type);?>
 	</div>
 	<?php endforeach;?>
@@ -101,7 +111,8 @@
 			var $link = $(this);
 			if ($link.hasClass("disabled")) return false;
 
-			if ($form.find("input").eq(0).val().length==0 || $form.find("input").eq(1).length==0) {
+			if ($form.find(".login-name-row").not(".hide").find("input").val().length === 0 ||
+				$form.find("input[type=password]").length === 0) {
 				noty({"text": "请先填写用户名和密码", "type": "warning", "timeout": 2000, "layout": "topCenter"});
 				return false;
 			}
