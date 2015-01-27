@@ -343,6 +343,10 @@ class SrbacModule extends CWebModule {
      */
     public function beforeControllerAction($controller, $action) {
         if (parent::beforeControllerAction($controller, $action)) {
+			Yii::app()->clientScript->packages['jquery'] = array(
+				'baseUrl' => $this->getAssetsUrl(). '/js',
+				'script' => ['jquery.min.js', 'jquery-migrate-1.2.1.js'],
+			);
             return true;
         } else
             return false;
