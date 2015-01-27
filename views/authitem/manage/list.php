@@ -58,12 +58,6 @@ endif; ?>
 		<?php
 		echo SrbacHtml::ajaxLink(
 			'<strong>+</strong>'. SrbacHelper::translate('srbac', 'Create'),
-//            SHtml::image($this->module->getIconsPath() . '/create.png',
-//                Helper::translate('srbac', 'Create'),
-//                array('border' => 0,
-//                    'class' => 'icon', 'title' => Helper::translate('srbac', 'Create'),
-//                )
-//            ) . Helper::translate('srbac', 'Create'),
 			array('create'),
 			array(
 				'type' => 'POST',

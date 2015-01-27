@@ -22,7 +22,7 @@
  *
  * @property SrbacModule $srbac
  */
-Yii::import("srbac.components.Helper");
+Yii::import("srbac.components.SrbacHelper");
 
 class SBaseController extends CController {
 
@@ -113,7 +113,7 @@ class SBaseController extends CController {
      * @return array The always allowed auth items
      */
     protected function allowedAccess() {
-        Yii::import("srbac.components.Helper");
+        Yii::import("srbac.components.SrbacHelper");
         return $this->srbac->getAlwaysAllowed();
     }
 

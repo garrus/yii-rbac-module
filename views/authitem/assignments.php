@@ -46,7 +46,7 @@
     </div>
 <?php } else { ?>
     <?php $url = Yii::app()->urlManager->createUrl("srbac/authitem/showAssignments", array("id" => $id)); ?>
-    <?php Yii::import("srbac.components.Helper"); ?>
+    <?php Yii::import("srbac.components.SrbacHelper"); ?>
     <?php   Yii::app()->clientScript->registerScript(
         "alert",
         "$.ajax({

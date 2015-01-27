@@ -112,7 +112,7 @@ class SrbacModule extends CWebModule {
                 'tr' => [
                     'class' => 'CPhpMessageSource',
                     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'messages',
-                    'onMissingTranslation' => "Helper::markWords",
+                    'onMissingTranslation' => "SrbacHelper::markWords",
                 ],
             ]
         );

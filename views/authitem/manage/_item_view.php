@@ -31,9 +31,6 @@ endif;
 		<?php
 		echo SrbacHtml::ajaxLink(
 			SrbacHelper::translate('srbac', 'Update'),
-//			SHtml::image($this->module->getIconsPath() . '/update.png',
-//				Helper::translate('srbac', 'Update'),
-//				array('border' => 0, 'title' => Helper::translate('srbac', 'Update'))),
 			array('update', 'id' => $data->name),
 			array(
 				'type' => 'POST',
@@ -46,9 +43,6 @@ endif;
 		if ($data->name != SrbacHelper::findModule('srbac')->superUser):
 			echo SrbacHtml::ajaxLink(
 				SrbacHelper::translate('srbac', 'Delete'),
-//				SHtml::image($this->module->getIconsPath() . '/delete.png'
-//					, Helper::translate('srbac', 'Delete'),
-//					array('border' => 0, 'title' => Helper::translate('srbac', 'Delete'))),
 				array('confirm', 'id' => $data->name),
 				array(
 					'type' => 'POST',
