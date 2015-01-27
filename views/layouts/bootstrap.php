@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <?php $assetsUrl = Yii::app()->getModule('srbac')->getAssetsUrl();?>
 <head>
-	<link rel="icon" href="/favicon.png" type="image/png" >
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 	<meta content="ie=7" http-equiv="x-ua-compatible">
 
@@ -29,6 +28,8 @@
 	<script type=text/javascript src="/js/admincp.js"></SCRIPT>
 	-->
 	<script type="text/javascript" src="<?php echo $assetsUrl;?>/js/jquery.noty.packaged.min.js"></SCRIPT>
+
+	<title><?php echo CHtml::encode($this->pageTitle ?: Yii::app()->name, ' - 管理后台');?> </title>
 </head>
 
 <body>

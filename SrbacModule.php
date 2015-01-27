@@ -66,11 +66,11 @@ class SrbacModule extends CWebModule {
     /* @var $superUser String The name of the superuser */
     public $superUser = "authorizor";
     /* @var $css string The css to use */
-    public $css = "srbac.css";
+    public $css = "srbac.assets.css";
     /* @var $notAuthorizedView String The view to render when unathorized access */
     public $notAuthorizedView = "srbac.views.authitem.unauthorized";
     /* @var $imagesPath string The path to srbac images */
-    public $imagesPath = "srbac.images";
+    public $imagesPath = "srbac.assets.images";
     /* @var $imagesPack String The images theme to use */
     public $imagesPack = "tango";
     /* @var $header String Srbac header */

@@ -22,7 +22,7 @@
  *
  * @property SrbacModule $srbac
  */
-Yii::import("srbac.components.SrbacHelper");
+Yii::import('application.modules.srbac.components.*');
 
 class SBaseController extends CController {
 
@@ -113,7 +113,6 @@ class SBaseController extends CController {
      * @return array The always allowed auth items
      */
     protected function allowedAccess() {
-        Yii::import("srbac.components.SrbacHelper");
         return $this->srbac->getAlwaysAllowed();
     }
 
@@ -151,11 +150,11 @@ class SBaseController extends CController {
 					]);
 					Yii::app()->end();
 				} else {
-					$this->renderPartial(Yii::app()->getModule('srbac')->notAuthorizedView, $error);
+					$this->renderPartial($this->getSrbac()->notAuthorizedView, $error);
 				}
             } else {
 				$this->layout = 'application.modules.srbac.views.layouts.bootstrap';
-                $this->render(Yii::app()->getModule('srbac')->notAuthorizedView, $error);
+                $this->render($this->getSrbac()->notAuthorizedView, $error);
             }
             return false;
         }
