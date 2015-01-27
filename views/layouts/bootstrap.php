@@ -29,6 +29,17 @@
 	<script type=text/javascript src="/js/admincp.js"></SCRIPT>
 	-->
 	<script type="text/javascript" src="<?php echo $assetsUrl;?>/js/jquery.noty.packaged.min.js"></SCRIPT>
+
+	<script type="text/javascript">
+		$(function(){
+			if (!window.noty) {
+				window.noty = function(options){
+					var text = "[" + options.type.toUpperCase() + "]\n\n" + options.text;
+					alert(text);
+				};
+			}
+		});
+	</script>
 </head>
 
 <body>

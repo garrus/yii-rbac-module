@@ -42,10 +42,18 @@ class SrbacLoginForm extends CFormModel{
 	}
 
 	/**
+	 * @throws InvalidArgumentException
 	 * @return SrbacUserIdentity
 	 */
 	protected function createUserIdentity(){
-		return new SrbacUserIdentity([
+		$class = Yii::app()->getModule('srbac')->userIdentityClass;
+		if (!$class) {
+			$class = 'SrbacUserIdentity';
+		} elseif (!is_subclass_of($class, 'SrbacUserIdentity')) {
+			throw new InvalidArgumentException('Module srbac.userIdentityClass should be a sub class of srbac.components.SrbacUserIdentity');
+		}
+
+		return new $class([
 			'name' => $this->name,
 			'stuff_no' => $this->stuff_no,
 			'email' => $this->email,

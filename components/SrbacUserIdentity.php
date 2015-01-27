@@ -39,7 +39,7 @@ class SrbacUserIdentity extends CComponent implements IUserIdentity{
 	 * @return SrbacUserIdentity
 	 */
 	public static function createTrusted(SrbacUser $user){
-		$ui = new self();
+		$ui = new static();
 		$ui->user = $user;
 		$ui->password = false;
 		return $ui;

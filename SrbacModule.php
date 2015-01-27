@@ -90,6 +90,8 @@ class SrbacModule extends CWebModule {
 
 	public $allowRegister = false;
 
+	public $userIdentityClass; // defaults to srbac.components.SrbacUserIdentity
+
     /**
      * this method is called when the module is being created you may place code
      * here to customize the module or the application
@@ -132,7 +134,7 @@ class SrbacModule extends CWebModule {
 				if (!isset($config['class'])) {
 					$config['class'] = 'application.modules.srbac.extensions.MultiMailer.MultiMailer';
 				}
-				$mailer = Yii::createComponent($this->mailer);
+				$mailer = Yii::createComponent($config);
 				if ($mailer instanceof CApplicationComponent) {
 					$mailer->init();
 				}

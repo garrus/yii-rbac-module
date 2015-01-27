@@ -113,6 +113,7 @@
 
 			if ($form.find(".login-name-row").not(".hide").find("input").val().length === 0 ||
 				$form.find("input[type=password]").length === 0) {
+				e.preventDefault();
 				noty({"text": "请先填写用户名和密码", "type": "warning", "timeout": 2000, "layout": "topCenter"});
 				return false;
 			}
@@ -125,15 +126,16 @@
 			$form.find("#dynamic_password").val("");
 			var xhr = $.post($form.attr("action"), $form.serialize(), function(json){
 				if (json.ret == 1) {
-					noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
 					$link.removeClass("disabled");
 					$link.text($link.data("ori-text"));
+					noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
 				} else {
-					noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
 					startCounting();
+					noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
 				}
 			}, "json").error(function(xhr, settings, error){
 				$link.removeClass("disabled");
+				$link.text($link.data("ori-text"));
 				noty({"text": xhr.responseText, "type": "error", "timeout": 7000, "layout": "topCenter"});
 			});
 
@@ -165,12 +167,12 @@
 			if (!$dp.val()) {
 				$btn.attr("disabled", true).addClass("disabled");
 				$.post($form.attr("action"), $form.serialize(), function(json){
+					$btn.attr("disabled", false).removeClass("disabled");
 					if (json.ret == 1) {
 						noty({"text": json.msg, "type": "error", "timeout": 7000, "layout": "topCenter"});
 					} else {
 						noty({"text": json.msg, "type": "success", "timeout": 7000, "layout": "topCenter"});
 					}
-					$btn.attr("disabled", false).removeClass("disabled");
 				}, "json").error(function(xhr, settings, error){
 					$btn.attr("disabled", false).removeClass("disabled");;
 					noty({"text": xhr.responseText, "type": "error", "timeout": 7000, "layout": "topCenter"});
