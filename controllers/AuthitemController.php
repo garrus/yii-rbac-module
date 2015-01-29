@@ -27,6 +27,11 @@ class AuthitemController extends SBaseController {
      */
     private $_model;
 
+	/**
+	 * @var array
+	 */
+	private $_scanExcludePaths;
+
     public function init() {
         parent::init();
     }
@@ -571,10 +576,11 @@ class AuthitemController extends SBaseController {
         $criteria->condition = "name LIKE :name";
         $criteria->params = array(":name" => "%" . Yii::app()->request->getParam('q') . "%");
         $items = AuthItem::model()->findAll($criteria);
+		$valuesArray = [];
         foreach ($items as $item) {
             $valuesArray[] = $item->name;
         }
-        echo join("\n", $valuesArray);
+        echo implode("\n", $valuesArray);
     }
 
     /**
@@ -944,10 +950,14 @@ class AuthitemController extends SBaseController {
     }
 
     private function _scanDir($contPath, $module = "", $subdir = "", $controllers = array()) {
+
         $handle = opendir($contPath);
         $del = SrbacHelper::findModule('srbac')->delimeter;
         while (($file = readdir($handle)) !== false) {
             $filePath = $contPath . DIRECTORY_SEPARATOR . $file;
+			if ($this->_isPathExcluded($filePath)) {
+				continue;
+			}
             if (is_file($filePath)) {
                 if (preg_match("/^(.+)Controller.php$/", basename($file))) {
                     if ($this->_extendsSBaseController($filePath)) {
@@ -962,6 +972,38 @@ class AuthitemController extends SBaseController {
         }
         return $controllers;
     }
+
+	private function _isPathExcluded($path){
+		return in_array($path, $this->getScanExcludePaths());
+	}
+
+	private function getScanExcludePaths(){
+		if (null === $this->_scanExcludePaths) {
+			$excludePaths = [];
+			$fileAlias = $this->getModule()->scanExclude;
+			if ($fileAlias) {
+				$filePath = Yii::getPathOfAlias($fileAlias). '.php';
+				if ($filePath && file_exists($filePath)) {
+					$aliases = require $filePath;
+					if (!is_array($aliases)) {
+						throw new Exception('File '. $filePath. ' should return an array.');
+					}
+					foreach ($aliases as $alias) {
+						$controllerPath = Yii::getPathOfAlias($alias);
+						if (!$controllerPath) {
+							trigger_error('Invalid path alias found in srbac.scanExclude file: '. $alias, E_USER_WARNING);
+						} else {
+							$excludePaths[] = is_dir($controllerPath) ? $controllerPath : $controllerPath. '.php';
+						}
+					}
+				} else {
+					throw new InvalidArgumentException('Module srbac.scanExclude should be a valid aliases that refers to a php file.');
+				}
+			}
+			$this->_scanExcludePaths = $excludePaths;
+		}
+		return $this->_scanExcludePaths;
+	}
 
     private function _extendsSBaseController($controller) {
         $c = basename(str_replace(".php", "", $controller));
