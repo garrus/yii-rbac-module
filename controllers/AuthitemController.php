@@ -710,95 +710,87 @@ class AuthitemController extends SBaseController {
         if (substr_count($controller, $del)) {
             $c = explode($del, $controller);
             $controller = $c[1];
-            $module = $c[0] . $del;
+            $modulePrefix = $c[0] . $del;
             $contPath = Yii::app()->getModule($c[0])->getControllerPath();
             $control = $contPath . DIRECTORY_SEPARATOR . str_replace(".", DIRECTORY_SEPARATOR, $controller) . ".php";
         } else {
-            $module = "";
+            $modulePrefix = "";
             $contPath = Yii::app()->getControllerPath();
             $control = $contPath . DIRECTORY_SEPARATOR . str_replace(".", DIRECTORY_SEPARATOR, $controller) . ".php";
         }
+		$tokens = explode('.', $controller);
+		$className = array_pop($tokens);
+		$controllerId = substr($className, 0, -10);
+		$itemNamePrefix = $modulePrefix. (count($tokens) ? implode('.', $tokens). '.' : ''). $controllerId;
 
-        $task = $module . str_replace("Controller", "", $controller);
-
-        $taskViewingExists = $auth->getAuthItem($task . "Viewing") !== null ? true : false;
-        $taskAdministratingExists = $auth->getAuthItem($task . "Administrating") !== null ? true : false;
+		$taskViewingExists = $auth->getAuthItem($itemNamePrefix . 'Viewing') !== null ? true : false;
+        $taskAdministratingExists = $auth->getAuthItem($itemNamePrefix . 'Administrating') !== null ? true : false;
         $delete = Yii::app()->request->getParam('delete');
 
-        $h = file($control);
-        for ($i = 0; $i < count($h); $i++) {
-            $line = trim($h[$i]);
-            if (preg_match("/^(.+)function( +)action*/", $line)) {
-                $posAct = strpos(trim($line), "action");
-                $posPar = strpos(trim($line), "(");
-                $action = trim(substr(trim($line), $posAct, $posPar - $posAct));
-                $patterns[0] = '/\s*/m';
-                $patterns[1] = '#\((.*)\)#';
-                $patterns[2] = '/\{/m';
-                $replacements[2] = '';
-                $replacements[1] = '';
-                $replacements[0] = '';
-                $action = preg_replace($patterns, $replacements, trim($action));
-                $itemId = $module . str_replace("Controller", "", $controller) .
-                    preg_replace("/action/", "", $action, 1);
-                if ($action != "actions") {
-                    if ($getAll) {
-                        $actions[$module . $action] = $itemId;
-                        if (in_array($itemId, $this->allowedAccess())) {
-                            $allowed[] = $itemId;
-                        }
-                    } else {
-                        if (in_array($itemId, $this->allowedAccess())) {
-                            $allowed[] = $itemId;
-                        } else {
-                            if ($auth->getAuthItem($itemId) === null && !$delete) {
-                                if (!in_array($itemId, $this->allowedAccess())) {
-                                    $actions[$module . $action] = $itemId;
-                                }
-                            } else if ($auth->getAuthItem($itemId) !== null && $delete) {
-                                if (!in_array($itemId, $this->allowedAccess())) {
-                                    $actions[$module . $action] = $itemId;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    //load controller
-                    if (!class_exists($controller, false)) {
-                        require($control);
-                    }
-                    $tmp = array();
-                    $controller_obj = new $controller($controller, $module);
-                    //Get actions
-                    $controller_actions = $controller_obj->actions();
-                    foreach ($controller_actions as $cAction => $value) {
-                        $itemId = $module . str_replace("Controller", "", $controller) . ucfirst($cAction);
-                        if ($getAll) {
-                            $actions[$cAction] = $itemId;
-                            if (in_array($itemId, $this->allowedAccess())) {
+		if (!class_exists($className, false)) {
+			require_once $control;
+			if (!class_exists($className, false)) {
+				throw new CHttpException(404, '未找到名为'. $className. '的控制器。');
+			}
+		}
+		$rflClass = new ReflectionClass($className);
+        foreach ($rflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $rflMethod) {
+			$methodName = $rflMethod->name;
 
-                                $allowed[] = $itemId;
-                            }
-                        } else {
-                            if (in_array($itemId, $this->allowedAccess())) {
-                                $allowed[] = $itemId;
-                            } else {
-                                if ($auth->getAuthItem($itemId) === null && !$delete) {
-                                    if (!in_array($itemId, $this->allowedAccess())) {
-                                        $actions[$cAction] = $itemId;
-                                    }
-                                } else if ($auth->getAuthItem($itemId) !== null && $delete) {
-                                    if (!in_array($itemId, $this->allowedAccess())) {
-                                        $actions[$cAction] = $itemId;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return array($actions, $allowed, $delete, $task, $taskViewingExists, $taskAdministratingExists);
+			if (strpos($methodName, 'action') !== 0) continue;
+			if ($methodName != 'actions') {
+				$actionId = substr($methodName, 6);
+				$itemName = $itemNamePrefix. $actionId;
+				if ($getAll) {
+					$actions[$itemNamePrefix . $actionId] = $itemName;
+					if (in_array($itemName, $this->allowedAccess())) {
+						$allowed[] = $itemName;
+					}
+				} else {
+					if (in_array($itemName, $this->allowedAccess())) {
+						$allowed[] = $itemName;
+					} else {
+						if ($auth->getAuthItem($itemName) === null && !$delete) {
+							if (!in_array($itemName, $this->allowedAccess())) {
+								$actions[$itemNamePrefix. $actionId] = $itemName;
+							}
+						} else if ($auth->getAuthItem($itemName) !== null && $delete) {
+							if (!in_array($itemName, $this->allowedAccess())) {
+								$actions[$itemNamePrefix. $actionId] = $itemName;
+							}
+						}
+					}
+				}
+			} else {
+				//Get actions
+				$controllerObj = $rflClass->newInstanceArgs([$controllerId, $modulePrefix]);
+				foreach ($rflMethod->invoke($controllerObj) as $cAction => $value) {
+					$itemName = $modulePrefix. $controllerId. ucfirst($cAction);
+					if ($getAll) {
+						$actions[$cAction] = $itemName;
+						if (in_array($itemName, $this->allowedAccess())) {
+							$allowed[] = $itemName;
+						}
+					} else {
+						if (in_array($itemName, $this->allowedAccess())) {
+							$allowed[] = $itemName;
+						} else {
+							if ($auth->getAuthItem($itemName) === null && !$delete) {
+								if (!in_array($itemName, $this->allowedAccess())) {
+									$actions[$cAction] = $itemName;
+								}
+							} else if ($auth->getAuthItem($itemName) !== null && $delete) {
+								if (!in_array($itemName, $this->allowedAccess())) {
+									$actions[$cAction] = $itemName;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return array($actions, $allowed, $delete, $itemNamePrefix, $taskViewingExists, $taskAdministratingExists);
     }
 
     /**

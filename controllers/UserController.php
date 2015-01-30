@@ -445,7 +445,7 @@ class UserController extends SBaseController{
 
 	public function actionLogout(){
 		Yii::app()->user->logout();
-		$this->redirect(['srbac/user/login']);
+		$this->redirect(['/srbac/user/login']);
 	}
 
 	public function actionRegister(){
