@@ -34,7 +34,7 @@
 	<div class="form-group col-md-12">
 		<?php echo $form->labelEx($model,'email',['class' => 'control-label col-md-2']); ?>
 		<?php echo $form->textField($model,'email',array('size'=>25, 'maxlength'=>63, 'class' => 'form-control', 'required' => 'required')); ?>
-		<div class="field-desc text-info">必填，在登陆时用来接收动态密码</div>
+		<div class="field-desc text-info">必填</div>
 		<?php echo $form->error($model,'email', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']); ?>
 	</div>
 

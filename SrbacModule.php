@@ -94,6 +94,8 @@ class SrbacModule extends CWebModule {
 
 	public $scanExclude; //  a path alias to an php file that return a list of aliases.
 
+    public $enableDynamicLoginPass = true;
+
     /**
      * this method is called when the module is being created you may place code
      * here to customize the module or the application

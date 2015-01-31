@@ -5,6 +5,7 @@
  * @var CActiveForm $form
  * @var string $dynamicPassword
  * @var boolean $showRegisterLink
+ * @var boolean $showDynamicPassword
  */
 ?>
 <script type="text/javascript">
@@ -80,6 +81,7 @@
 		<?php echo $form->error($model, 'password', ['errorCssClass' => 'has-error', 'successCssClass' => 'has-success']);?>
 	</div>
 
+	<?php if ($showDynamicPassword): ?>
 	<div class="form-group">
 		<?php echo CHtml::label('动态密码', 'dynamic_password', ['class' => 'control-label']);?>
 		<?php echo CHtml::textField('dynamic_password', $dynamicPassword, ['class' => 'form-control', 'autocomplete' => 'off']);?>
@@ -88,9 +90,9 @@
 			<?php echo CHtml::link('获取动态密码', '#', ['class' => 'btn btn-default btn-sm', 'id' => 'resent-dynamic-password']);?>
 		</p>
 	</div>
+	<?php endif;?>
 
 	<div class="form-group">
-
 		<?php echo CHtml::submitButton('登录', ['class' => 'btn btn-primary']);?>
 		<?php if (!empty($showRegisterLink)): ?>or <?php echo CHtml::link('注册', ['register']); endif;?>
 	</div>
@@ -107,7 +109,8 @@
 			var $targetRow = $form.find(".login-name-row[role=login-by-" + type + "]");
 			$targetRow.toggleClass("hide", false).find("input[type=text]").attr("disabled", false);
 			$targetRow.siblings(".login-name-row").toggleClass("hide", true).find("input[type=text]").attr("disabled", "disabled");
-		}).delegate("#resent-dynamic-password", "click", function(e){
+		})<?php if ($showDynamicPassword):?>
+			.delegate("#resent-dynamic-password", "click", function(e){
 			var $link = $(this);
 			if ($link.hasClass("disabled")) return false;
 
@@ -157,8 +160,9 @@
 			}
 
 			return false;
-		});
+		})<?php endif;?>;
 
+		<?php if ($showDynamicPassword):?>
 		$form.on("submit", function(e){
 			var $btn = $form.find("input[type=submit]");
 			if ($btn.hasClass("disabled")) return false;
@@ -180,5 +184,6 @@
 				e.preventDefault();
 			}
 		});
+		<?php endif;?>
 	});
 </script>

@@ -45,13 +45,15 @@ class UserController extends SBaseController{
 			}
 		}
 
-		try {
-			Yii::app()->db->createCommand('delete from srbac_dynamic_pass where expire_time<:time')->execute([':time' => time()]);
-		} catch (CDbException $e) {
-			if (strpos($e->getMessage(), 'table or view not found') === false) {
-				throw new CHttpException(500, $e->getMessage());
-			} else {
-				$this->createDynamicPassTable();
+		if ($this->getSrbac()->enableDynamicLoginPass) {
+			try {
+				Yii::app()->db->createCommand('delete from srbac_dynamic_pass where expire_time<:time')->execute([':time' => time()]);
+			} catch (CDbException $e) {
+				if (strpos($e->getMessage(), 'table or view not found') === false) {
+					throw new CHttpException(500, $e->getMessage());
+				} else {
+					$this->createDynamicPassTable();
+				}
 			}
 		}
 
@@ -301,13 +303,21 @@ class UserController extends SBaseController{
 		if ($email && $email != $this->getSrbac()->adminEmail) {
 			$form->email = $email;
 		}
-		$dynamicPassword = $req->getPost('dynamic_password', $dynamicPassword);
+		if (!$this->getSrbac()->enableDynamicLoginPass) {
+			$dynamicPassword = false;
+		} else {
+			$dynamicPassword = $req->getPost('dynamic_password', $dynamicPassword);
+		}
 
 		if (isset($_POST['SrbacLoginForm'])) {
 			$form->attributes = $_POST['SrbacLoginForm'];
 			if ($form->validate()) {
 				$session['password_validated'] = $form->getUserId();
-				if ($dynamicPassword) {
+				if ($dynamicPassword === false) {
+					if ($form->login()) {
+						$this->afterLogin();
+					}
+				} elseif ($dynamicPassword) {
 					if ($form->validateDynamicPassword($dynamicPassword) && $form->login()) {
 						$this->afterLogin();
 					}
@@ -355,6 +365,7 @@ class UserController extends SBaseController{
 				'model' => $form,
 				'dynamicPassword' => $dynamicPassword,
 				'showRegisterLink' => $this->getSrbac()->allowRegister,
+				'showDynamicPassword' => $this->getSrbac()->enableDynamicLoginPass,
 			]);
 		}
 	}

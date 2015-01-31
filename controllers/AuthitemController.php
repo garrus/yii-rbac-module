@@ -742,7 +742,7 @@ class AuthitemController extends SBaseController {
 				$actionId = substr($methodName, 6);
 				$itemName = $itemNamePrefix. $actionId;
 				if ($getAll) {
-					$actions[$itemNamePrefix . $actionId] = $itemName;
+					$actions[$modulePrefix . $methodName] = $itemName;
 					if (in_array($itemName, $this->allowedAccess())) {
 						$allowed[] = $itemName;
 					}
@@ -752,11 +752,11 @@ class AuthitemController extends SBaseController {
 					} else {
 						if ($auth->getAuthItem($itemName) === null && !$delete) {
 							if (!in_array($itemName, $this->allowedAccess())) {
-								$actions[$itemNamePrefix. $actionId] = $itemName;
+								$actions[$modulePrefix. $methodName] = $itemName;
 							}
 						} else if ($auth->getAuthItem($itemName) !== null && $delete) {
 							if (!in_array($itemName, $this->allowedAccess())) {
-								$actions[$itemNamePrefix. $actionId] = $itemName;
+								$actions[$modulePrefix. $methodName] = $itemName;
 							}
 						}
 					}

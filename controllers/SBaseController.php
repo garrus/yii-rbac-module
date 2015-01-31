@@ -103,7 +103,6 @@ class SBaseController extends CController {
 				$log .= PHP_EOL. 'referrer='. $req->urlReferrer;
 			}
 			Yii::getLogger()->log($log, CLogger::LEVEL_INFO, 'srbac.access.'. strtolower(Yii::app()->request->getRequestType()));
-			Yii::getLogger()->flush(true);
 		}
 	}
 

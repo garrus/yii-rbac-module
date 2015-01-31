@@ -35,7 +35,7 @@
 <body>
 <!-- 页面操作提示信息使用,必须在body下 -->
 <div id="feedback_info" style="display:none;position:absolute;z-index:9999;"></div>
-<div id="cpcontainer" class="container-fluid">
+<div id="cpcontainer" class="container-fluid" style="margin-bottom: 20px;">
 	<?php echo $content;?>
 </div>
 
