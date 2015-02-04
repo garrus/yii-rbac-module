@@ -96,6 +96,8 @@ class SrbacModule extends CWebModule {
 
     public $enableDynamicLoginPass = true;
 
+	public $authCookieDuration = 3600;
+
     /**
      * this method is called when the module is being created you may place code
      * here to customize the module or the application

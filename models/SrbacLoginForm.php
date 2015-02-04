@@ -112,7 +112,16 @@ class SrbacLoginForm extends CFormModel{
 		}
 		$ui = $this->getUserIdentity();
 		if ($ui->getIsAuthenticated()) {
-			Yii::app()->user->login($this->_ui, 86400);
+			$webUser = Yii::app()->user;
+			if ($webUser->allowAutoLogin) {
+				$duration = Yii::app()->getModule('srbac')->authCookieDuration;
+				if (is_int($duration) && $duration > 0) {
+					Yii::app()->user->login($this->_ui, $duration);
+					return true;
+				}
+			}
+			Yii::app()->user->login($this->_ui);
+			return true;
 		}
 
 		return !$this->hasErrors();
