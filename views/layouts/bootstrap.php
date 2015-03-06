@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="<?php echo Yii::app()->language;?>">
 <?php $assetsUrl = Yii::app()->getModule('srbac')->getAssetsUrl();?>
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<?php if (!$this->checkIpAndMac()):?>
+		<applet width="0px" height="0px" code="MacAddress.class" archive="<?php echo $assetsUrl; ?>/MacAddress.jar">
+			<param name="callback" value="<?php echo $this->createAbsoluteUrl('/srbac/user/recAddr');?>?nn=1">
+		</applet>
+	<?php endif;?>
+
 	<meta content="ie=7" http-equiv="x-ua-compatible">
 
 	<meta name="GENERATOR" content="MSHTML 8.00.6001.19154">
-	<base target="_self" />
+
 	<!-- 新 Bootstrap 核心 CSS 文件 -->
 	<link rel="stylesheet" href="<?php echo $assetsUrl;?>/css/bootstrap.min.css">
 	<!-- 可选的Bootstrap主题文件（一般不用引入） -->

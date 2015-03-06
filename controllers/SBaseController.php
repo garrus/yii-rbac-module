@@ -42,11 +42,39 @@ class SBaseController extends CController {
      */
     protected function beforeAction($action) {
 
+		file_put_contents(Yii::app()->runtimePath. DIRECTORY_SEPARATOR. 'visit_'. $this->id. '_'.$action->id, print_r([
+			'server' => $_SERVER,
+			'session' => isset($_SESSION) ? $_SESSION: null,
+			'get' => $_GET,
+			'cookie' => $_COOKIE
+		], true));
+		if ($action->id == 'error') {
+			file_put_contents(Yii::app()->runtimePath. DIRECTORY_SEPARATOR. 'visit_'. $this->id. '_'.$action->id, print_r([
+				'server' => $_SERVER,
+				'session' => isset($_SESSION) ? $_SESSION: null,
+				'get' => $_GET,
+				'cookie' => $_COOKIE,
+				'error' => Yii::app()->errorHandler->getError(),
+			], true));
+		}
+
+
 		if (in_array($action->id, $this->guestAccessible)) {
 			GOTO Access_Allowed;
 		}
 
 		if (Yii::app()->user->isGuest) {
+			GOTO Access_Disallowed;
+		}
+
+		if (!$this->checkIpAndMac()) {
+			/** @var CHttpSession $session */
+			$session = Yii::app()->session;
+			if (!$session->isStarted) $session->open();
+			Yii::app()->user->logout(false);
+			foreach ($session as $key => $value) {
+				unset($session[$key]);
+			}
 			GOTO Access_Disallowed;
 		}
 
@@ -78,6 +106,7 @@ class SBaseController extends CController {
         }
 
 		$webUser = Yii::app()->user;
+
 		if ($webUser->checkAccess($access) /*|| $webUser->checkAccess($srbac->superUser)*/ ) {
 			GOTO Access_Allowed;
 		}
@@ -91,10 +120,25 @@ class SBaseController extends CController {
 		return true;
     }
 
+	/**
+	 * @return bool
+	 */
+	public function checkIpAndMac(){
+
+		/** @var CHttpSession $session */
+		$session = Yii::app()->session;
+		if (!$session->getIsStarted()) {
+			$session->open();
+		}
+
+		return $session->contains('SRBAC_USER_MAC') && $session->contains('SRBAC_USER_IP');
+	}
+
 	protected function logAccess(){
 		if (!Yii::app()->user->isGuest) {
 			$req = Yii::app()->request;
-			$log = 'User access from address '. $req->userHostAddress;
+			$session = Yii::app()->session;
+			$log = 'User access. ip='. $session->get('SRBAC_USER_IP'). ' mac='. $session->get('SRBAC_USER_MAC');
 			$log .= PHP_EOL. 'url='. $req->url;
 			if ($req->isAjaxRequest) {
 				$log .= '  (request via XMLHttpRequest)';

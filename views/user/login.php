@@ -11,8 +11,11 @@
 <script type="text/javascript">
 	if (window.top !== window) window.top.location.href = location.href;
 </script>
+
+
+
 <div class="row" style="
-	margin: 150px auto;
+	margin: 100px auto;
 	width: 500px;
 	border-radius: 10px;
 	border: 2px solid #333;
@@ -99,6 +102,21 @@
 
 	<?php $this->endWidget($form);?>
 </div>
+
+<div class="row well" style="
+margin: 100px auto;
+width: 500px;
+padding: 15px 20px;">
+	<h4 style="color:red;">如何启用IP地址插件？</h4>
+	<ol>
+		<li>根据弹出的提示安装或升级Java 8运行环境（若机器上已安装Java 8，则这一步会跳过）</li>
+		<li>打开 <i>控制面板->Java（32 位）</i> 选项（如果控制面板里的设置项是按类别显示的，则按此路径寻找：<i>控制面板->程序->Java（32 位）</i>）</li>
+		<li>在弹出的Java控制面板中，选择“安全”选项卡，在“例外站点列表”中添加 <strong><?php echo Yii::app()->request->hostInfo;?></strong>，然后点击确定。</li>
+		<li>重新启动chrome浏览器并打开此页面后，浏览器可能还会进一步阻拦插件的运行，此时需要点击地址栏里靠右的那个提示按钮，选择始终允许使用此站点上的插件即可。</li>
+	</ol>
+
+</div>
+
 
 <script type="text/javascript">
 	$(function(){

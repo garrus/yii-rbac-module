@@ -6,7 +6,7 @@ class UserController extends SBaseController{
 
 	public $menu = [];
 	public $layout = '/layouts/bootstrap';
-	public $guestAccessible = ['login', 'logout', 'register', 'quickLogin', 'update'];
+	public $guestAccessible = ['login', 'recAddr', 'logout', 'register', 'quickLogin', 'update'];
 
 	public function init(){
 		$this->checkInstallation();
@@ -311,7 +311,10 @@ class UserController extends SBaseController{
 
 		if (isset($_POST['SrbacLoginForm'])) {
 			$form->attributes = $_POST['SrbacLoginForm'];
-			if ($form->validate()) {
+			if (!$this->checkIpAndMac()) {
+				$form->addError('', '记录IP地址的插件未运行，禁止登录！');
+			}
+			if ($form->validate(null, false)) {
 				$session['password_validated'] = $form->getUserId();
 				if ($dynamicPassword === false) {
 					if ($form->login()) {
@@ -377,6 +380,23 @@ class UserController extends SBaseController{
 			$this->redirect($this->module->backendHomeUrl);
 		}
 		Yii::app()->end(); // actually this line is not necessary
+	}
+
+	public function actionRecAddr(){
+
+		parse_str(parse_url(Yii::app()->request->url, PHP_URL_QUERY), $data);
+		if (!isset($data['ip']) || !isset($data['mac'])) {
+			throw new CHttpException(400, 'Lack required parameters.');
+		}
+		/** @var CHttpSession $session */
+		$session = Yii::app()->session;
+		if (!$session->getIsStarted()) {
+			$session->open();
+		}
+		$session['SRBAC_USER_IP'] = $data['ip'];
+		$session['SRBAC_USER_MAC'] = $data['mac'];
+		header('http/1.1 204');
+		Yii::app()->end();
 	}
 
 	public function actionQuickLogin($id, $email, $code){
