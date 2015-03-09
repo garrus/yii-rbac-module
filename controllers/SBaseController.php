@@ -42,23 +42,6 @@ class SBaseController extends CController {
      */
     protected function beforeAction($action) {
 
-		file_put_contents(Yii::app()->runtimePath. DIRECTORY_SEPARATOR. 'visit_'. $this->id. '_'.$action->id, print_r([
-			'server' => $_SERVER,
-			'session' => isset($_SESSION) ? $_SESSION: null,
-			'get' => $_GET,
-			'cookie' => $_COOKIE
-		], true));
-		if ($action->id == 'error') {
-			file_put_contents(Yii::app()->runtimePath. DIRECTORY_SEPARATOR. 'visit_'. $this->id. '_'.$action->id, print_r([
-				'server' => $_SERVER,
-				'session' => isset($_SESSION) ? $_SESSION: null,
-				'get' => $_GET,
-				'cookie' => $_COOKIE,
-				'error' => Yii::app()->errorHandler->getError(),
-			], true));
-		}
-
-
 		if (in_array($action->id, $this->guestAccessible)) {
 			GOTO Access_Allowed;
 		}
