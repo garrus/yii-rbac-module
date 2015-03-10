@@ -5,7 +5,13 @@
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 	<?php if (!$this->checkIpAndMac()):?>
 		<applet width="0px" height="0px" code="MacAddress.class" archive="<?php echo $assetsUrl; ?>/MacAddress.jar">
-			<param name="callback" value="<?php echo $this->createAbsoluteUrl('/srbac/user/recAddr');?>?nn=1">
+			<param name="callback" value="<?php
+			$recAddrUrl = $this->createAbsoluteUrl('/srbac/user/recAddr');
+			if (strpos($recAddrUrl, '?') === false) {
+				$recAddrUrl .= '?_n_=1';
+			}
+			echo $recAddrUrl;
+			?>">
 		</applet>
 	<?php endif;?>
 
